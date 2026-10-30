@@ -1,0 +1,64 @@
+{
+  "dataset_name": "hr_employees",
+  "column_count": 7,
+  "row_count": 20,
+  "columns": {
+    "employee_id": {
+      "name": "employee_id",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 19,
+      "total_count": 20
+    },
+    "full_name": {
+      "name": "full_name",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 20,
+      "total_count": 20
+    },
+    "work_email": {
+      "name": "work_email",
+      "dtype": "str",
+      "nullable": true,
+      "null_count": 1,
+      "unique_count": 19,
+      "total_count": 20
+    },
+    "department": {
+      "name": "department",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 8,
+      "total_count": 20
+    },
+    "salary": {
+      "name": "salary",
+      "dtype": "int64",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 20,
+      "total_count": 20
+    },
+    "years_experience": {
+      "name": "years_experience",
+      "dtype": "int64",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 13,
+      "total_count": 20
+    },
+    "hire_date": {
+      "name": "hire_date",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 20,
+      "total_count": 20
+    }
+  },
+  "generated_at": "2026-10-30T09:33:43.041987+00:00"
+}

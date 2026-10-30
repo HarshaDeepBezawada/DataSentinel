@@ -74,6 +74,8 @@ class IQRAnomalyDetector:
         total_anomalies = 0
         row_offset = 0
 
+        center = (q1 + q3) / 2.0
+
         for chunk in dataset.iter_chunks():
             if column not in chunk.columns:
                 row_offset += len(chunk)
@@ -92,37 +94,43 @@ class IQRAnomalyDetector:
                 fval = float(val)
                 distance = lower_fence - fval
                 conf = min(1.0, 0.5 + 0.5 * (distance / (iqr + 1e-9)))
+                point = AnomalyPoint(
+                    column=column,
+                    row_index=int(idx) if isinstance(idx, int) else row_offset,
+                    value=round(fval, 4),
+                    score=round(conf, 4),
+                    method="iqr",
+                    lower_bound=round(lower_fence, 4),
+                    upper_bound=round(upper_fence, 4),
+                    message=f"Value {fval} below lower fence {lower_fence:.2f} (Q1={q1:.2f}, IQR={iqr:.2f})",
+                )
                 if len(anomalies) < self.max_samples:
-                    anomalies.append(
-                        AnomalyPoint(
-                            column=column,
-                            row_index=int(idx) if isinstance(idx, int) else row_offset,
-                            value=round(fval, 4),
-                            score=round(conf, 4),
-                            method="iqr",
-                            lower_bound=round(lower_fence, 4),
-                            upper_bound=round(upper_fence, 4),
-                            message=f"Value {fval} below lower fence {lower_fence:.2f} (Q1={q1:.2f}, IQR={iqr:.2f})",
-                        )
-                    )
+                    anomalies.append(point)
+                else:
+                    min_idx = min(range(len(anomalies)), key=lambda i: (anomalies[i].score, abs(anomalies[i].value - center)))
+                    if (point.score, abs(point.value - center)) > (anomalies[min_idx].score, abs(anomalies[min_idx].value - center)):
+                        anomalies[min_idx] = point
 
             for idx, val in outliers_high.items():
                 fval = float(val)
                 distance = fval - upper_fence
                 conf = min(1.0, 0.5 + 0.5 * (distance / (iqr + 1e-9)))
+                point = AnomalyPoint(
+                    column=column,
+                    row_index=int(idx) if isinstance(idx, int) else row_offset,
+                    value=round(fval, 4),
+                    score=round(conf, 4),
+                    method="iqr",
+                    lower_bound=round(lower_fence, 4),
+                    upper_bound=round(upper_fence, 4),
+                    message=f"Value {fval} above upper fence {upper_fence:.2f} (Q3={q3:.2f}, IQR={iqr:.2f})",
+                )
                 if len(anomalies) < self.max_samples:
-                    anomalies.append(
-                        AnomalyPoint(
-                            column=column,
-                            row_index=int(idx) if isinstance(idx, int) else row_offset,
-                            value=round(fval, 4),
-                            score=round(conf, 4),
-                            method="iqr",
-                            lower_bound=round(lower_fence, 4),
-                            upper_bound=round(upper_fence, 4),
-                            message=f"Value {fval} above upper fence {upper_fence:.2f} (Q3={q3:.2f}, IQR={iqr:.2f})",
-                        )
-                    )
+                    anomalies.append(point)
+                else:
+                    min_idx = min(range(len(anomalies)), key=lambda i: (anomalies[i].score, abs(anomalies[i].value - center)))
+                    if (point.score, abs(point.value - center)) > (anomalies[min_idx].score, abs(anomalies[min_idx].value - center)):
+                        anomalies[min_idx] = point
 
             row_offset += len(chunk)
 

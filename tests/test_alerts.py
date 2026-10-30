@@ -72,7 +72,7 @@ def test_email_notifier_send(monkeypatch: pytest.MonkeyPatch, mock_pipeline_resu
 
 def test_slack_notifier_payload_has_no_raw_data(mock_pipeline_result: PipelineRunResult, monkeypatch: pytest.MonkeyPatch) -> None:
     """Verify Slack Block Kit payload contains only aggregate counts and top violations."""
-    monkeypatch.setenv("TEST_SLACK_URL", "https://hooks.slack.com/services/T/B/X")
+    monkeypatch.setenv("TEST_SLACK_URL", "https://slack.example.com/services/test-webhook")
     notifier = SlackNotifier(webhook_url_env="TEST_SLACK_URL", channel="#alerts")
 
     payload = notifier._build_slack_payload(mock_pipeline_result)
@@ -88,7 +88,7 @@ def test_slack_notifier_payload_has_no_raw_data(mock_pipeline_result: PipelineRu
 
 def test_alert_manager(monkeypatch: pytest.MonkeyPatch, mock_pipeline_result: PipelineRunResult) -> None:
     """Test AlertManager orchestrating multiple notifiers."""
-    monkeypatch.setenv("SLACK_WEBHOOK_URL", "https://hooks.slack.com/services/dummy")
+    monkeypatch.setenv("SLACK_WEBHOOK_URL", "https://slack.example.com/services/dummy")
 
     cfg = AlertConfig(
         on_failure_only=True,

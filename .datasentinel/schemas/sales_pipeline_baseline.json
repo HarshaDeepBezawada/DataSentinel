@@ -1,0 +1,64 @@
+{
+  "dataset_name": "crm_deals",
+  "column_count": 7,
+  "row_count": 15,
+  "columns": {
+    "deal_id": {
+      "name": "deal_id",
+      "dtype": "str",
+      "nullable": true,
+      "null_count": 1,
+      "unique_count": 13,
+      "total_count": 15
+    },
+    "deal_name": {
+      "name": "deal_name",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 15,
+      "total_count": 15
+    },
+    "stage": {
+      "name": "stage",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 7,
+      "total_count": 15
+    },
+    "deal_value": {
+      "name": "deal_value",
+      "dtype": "int64",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 14,
+      "total_count": 15
+    },
+    "probability": {
+      "name": "probability",
+      "dtype": "float64",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 14,
+      "total_count": 15
+    },
+    "owner_email": {
+      "name": "owner_email",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 4,
+      "total_count": 15
+    },
+    "close_date": {
+      "name": "close_date",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 14,
+      "total_count": 15
+    }
+  },
+  "generated_at": "2026-10-30T09:33:45.128290+00:00"
+}

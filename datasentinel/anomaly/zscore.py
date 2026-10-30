@@ -84,19 +84,22 @@ class ZScoreAnomalyDetector:
                 z = float(z_scores.loc[idx])
                 # Confidence score scales from 0.5 at threshold to 1.0 at 1.5x threshold
                 conf = min(1.0, 0.5 + 0.5 * (abs(z) - self.threshold) / max(0.5, self.threshold * 0.5))
+                point = AnomalyPoint(
+                    column=column,
+                    row_index=int(idx) if isinstance(idx, int) else row_offset,
+                    value=round(val, 4),
+                    score=round(conf, 4),
+                    method="zscore",
+                    lower_bound=round(lower_bound, 4),
+                    upper_bound=round(upper_bound, 4),
+                    message=f"Value {val} has Z-score of {z:.2f} (threshold: > {self.threshold})",
+                )
                 if len(anomalies) < self.max_samples:
-                    anomalies.append(
-                        AnomalyPoint(
-                            column=column,
-                            row_index=int(idx) if isinstance(idx, int) else row_offset,
-                            value=round(val, 4),
-                            score=round(conf, 4),
-                            method="zscore",
-                            lower_bound=round(lower_bound, 4),
-                            upper_bound=round(upper_bound, 4),
-                            message=f"Value {val} has Z-score of {z:.2f} (threshold: > {self.threshold})",
-                        )
-                    )
+                    anomalies.append(point)
+                else:
+                    min_idx = min(range(len(anomalies)), key=lambda i: (anomalies[i].score, abs(anomalies[i].value - mean)))
+                    if (point.score, abs(point.value - mean)) > (anomalies[min_idx].score, abs(anomalies[min_idx].value - mean)):
+                        anomalies[min_idx] = point
 
             row_offset += len(chunk)
 
