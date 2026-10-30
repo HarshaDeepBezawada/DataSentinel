@@ -1,0 +1,78 @@
+name: "E-Commerce Orders Validation"
+
+source:
+  type: "csv"
+  name: "orders_csv"
+  options:
+    path: "data/ecommerce_orders.csv"
+    delimiter: ","
+
+schema_baseline:
+  fingerprint_path: ".datasentinel/schemas/ecommerce_orders_baseline.json"
+  auto_update: false
+
+rules:
+  - id: "RULE-ORD-001"
+    type: "null_check"
+    column: "order_id"
+    description: "Every order must possess a non-null identifier"
+    severity: "error"
+    params:
+      allow_nulls: false
+
+  - id: "RULE-ORD-002"
+    type: "unique_check"
+    column: "order_id"
+    description: "Order IDs must be strictly unique across the dataset"
+    severity: "error"
+    params:
+      min_unique_rate: 1.0
+
+  - id: "RULE-ORD-003"
+    type: "null_check"
+    column: "customer_email"
+    description: "Customer email must not be missing"
+    severity: "error"
+    params:
+      allow_nulls: false
+
+  - id: "RULE-ORD-004"
+    type: "regex"
+    column: "customer_email"
+    description: "Customer email must be a valid RFC 5322 formatted address"
+    severity: "warning"
+    params:
+      pattern: "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$"
+      full_match: true
+
+  - id: "RULE-ORD-005"
+    type: "range"
+    column: "total_amount"
+    description: "Order total amount must be strictly positive and under $10,000"
+    severity: "error"
+    params:
+      min_value: 0.01
+      max_value: 10000.00
+      inclusive: true
+
+  - id: "RULE-ORD-006"
+    type: "foreign_key"
+    column: "payment_method"
+    description: "Payment method must be one of the sanctioned gateway types"
+    severity: "error"
+    params:
+      reference_values:
+        - "credit_card"
+        - "paypal"
+        - "apple_pay"
+        - "bank_transfer"
+
+anomaly_detection:
+  enabled: true
+  columns:
+    - "total_amount"
+    - "item_count"
+  method: "both"
+  zscore_threshold: 3.0
+  iqr_multiplier: 1.5
+  max_anomalies_to_report: 10

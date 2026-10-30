@@ -1,0 +1,64 @@
+{
+  "dataset_name": "orders_csv",
+  "column_count": 7,
+  "row_count": 30,
+  "columns": {
+    "order_id": {
+      "name": "order_id",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 29,
+      "total_count": 30
+    },
+    "customer_email": {
+      "name": "customer_email",
+      "dtype": "str",
+      "nullable": true,
+      "null_count": 1,
+      "unique_count": 29,
+      "total_count": 30
+    },
+    "total_amount": {
+      "name": "total_amount",
+      "dtype": "float64",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 30,
+      "total_count": 30
+    },
+    "status": {
+      "name": "status",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 5,
+      "total_count": 30
+    },
+    "item_count": {
+      "name": "item_count",
+      "dtype": "int64",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 6,
+      "total_count": 30
+    },
+    "discount_rate": {
+      "name": "discount_rate",
+      "dtype": "float64",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 5,
+      "total_count": 30
+    },
+    "payment_method": {
+      "name": "payment_method",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 6,
+      "total_count": 30
+    }
+  },
+  "generated_at": "2026-10-30T06:09:18.994879+00:00"
+}

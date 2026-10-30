@@ -1,0 +1,57 @@
+"""Core domain types, exceptions, and DataSet wrapper."""
+
+from datasentinel.core.dataset import DataSet
+from datasentinel.core.exceptions import (
+    AlertNotificationError,
+    AnomalyDetectionError,
+    ConfigurationError,
+    ConnectionFailedError,
+    ConnectorError,
+    DataSentinelError,
+    ReportGenerationError,
+    RuleExecutionError,
+    RuleValidationError,
+    SchemaDriftError,
+    SourceNotFoundError,
+    StorageError,
+)
+from datasentinel.core.types import (
+    AnomalyPoint,
+    AnomalySummary,
+    ColumnSchema,
+    DriftItem,
+    DriftReport,
+    DriftType,
+    PipelineRunResult,
+    RuleResult,
+    SchemaFingerprint,
+    Severity,
+    ValidationStatus,
+)
+
+__all__ = [
+    "AlertNotificationError",
+    "AnomalyDetectionError",
+    "AnomalyPoint",
+    "AnomalySummary",
+    "ColumnSchema",
+    "ConfigurationError",
+    "ConnectionFailedError",
+    "ConnectorError",
+    "DataSet",
+    "DataSentinelError",
+    "DriftItem",
+    "DriftReport",
+    "DriftType",
+    "PipelineRunResult",
+    "ReportGenerationError",
+    "RuleExecutionError",
+    "RuleResult",
+    "RuleValidationError",
+    "SchemaDriftError",
+    "SchemaFingerprint",
+    "Severity",
+    "SourceNotFoundError",
+    "StorageError",
+    "ValidationStatus",
+]

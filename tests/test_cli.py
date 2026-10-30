@@ -1,0 +1,65 @@
+"""Tests for Typer CLI commands."""
+
+from pathlib import Path
+import pytest
+from typer.testing import CliRunner
+
+from datasentinel.cli import app
+
+runner = CliRunner()
+
+
+def test_cli_help() -> None:
+    """Test CLI root help text."""
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "DataSentinel" in result.stdout
+    assert "validate" in result.stdout
+    assert "report" in result.stdout
+    assert "compare-schemas" in result.stdout
+    assert "schedule" in result.stdout
+    assert "list-rules" in result.stdout
+
+
+def test_cli_list_rules() -> None:
+    """Test list-rules command against sample YAML configs."""
+    result = runner.invoke(app, ["list-rules", "config/ecommerce_orders.yaml"])
+    assert result.exit_code == 0
+    assert "E-Commerce Orders Validation" in result.stdout
+    assert "Total configured rules: 6" in result.stdout
+
+
+def test_cli_validate() -> None:
+    """Test validate command on ecommerce_orders.yaml (returns exit code 1 due to injected violations)."""
+    result = runner.invoke(app, ["validate", "config/ecommerce_orders.yaml", "--quiet"])
+    # Should exit with code 1 indicating quality failures detected
+    assert result.exit_code == 1
+    assert "E-Commerce Orders Validation" in result.stdout
+
+
+def test_cli_report(tmp_path: Path) -> None:
+    """Test report generation command."""
+    html_out = tmp_path / "cli_report.html"
+    pdf_out = tmp_path / "cli_report.pdf"
+
+    result = runner.invoke(app, [
+        "report",
+        "config/ecommerce_orders.yaml",
+        "--html", str(html_out),
+        "--pdf", str(pdf_out),
+    ])
+    assert result.exit_code == 0
+    assert html_out.exists()
+    assert pdf_out.exists()
+
+
+def test_cli_compare_schemas() -> None:
+    """Test compare-schemas command."""
+    result = runner.invoke(app, [
+        "compare-schemas",
+        "data/ecommerce_orders_drifted.csv",
+        "--baseline", "data/ecommerce_orders.csv",
+    ])
+    assert result.exit_code == 0
+    assert "REMOVED" in result.stdout
+    assert "ADDED" in result.stdout

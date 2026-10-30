@@ -1,0 +1,21 @@
+employee_id,full_name,work_email,department,salary,years_experience,hire_date
+EMP-001,Alice Smith,asmith@company.com,Engineering,115000,6,2020-03-15
+EMP-002,Bob Jones,bjones@company.com,Marketing,78000,4,2021-06-01
+EMP-003,Charlie Brown,cbrown@company.com,Engineering,135000,8,2018-09-12
+EMP-004,Diana Prince,dprince@company.com,Sales,92000,5,2019-11-20
+EMP-005,Edward Norton,,HR,68000,3,2022-01-10
+EMP-006,Frank Miller,fmiller@personalmail.org,Finance,88000,4,2021-04-18
+EMP-007,Grace Hopper,ghopper@company.com,Engineering,175000,12,2015-08-01
+EMP-008,Harry Potter,hpotter@company.com,Marketing,72000,-1,2023-02-14
+EMP-002,Duplicate Bob,bjones2@company.com,Engineering,95000,3,2022-07-01
+EMP-010,John Watson,jwatson@company.com,CryptoMining,85000,5,2020-05-11
+EMP-011,Karen Page,kpage@company.com,Legal,110000,7,2019-10-05
+EMP-012,Leo Tolstoy,ltolstoy@company.com,Engineering,125000,7,2018-12-03
+EMP-013,Mona Lisa,mlisa@company.com,Marketing,79000,4,2021-08-19
+EMP-014,Neo Anderson,nanderson@company.com,Engineering,140000,9,2017-04-22
+EMP-015,CEO BigBucks,ceo@company.com,Executive,1850000,25,2010-01-01
+EMP-016,Peter Parker,pparker@company.com,Sales,65000,2,2023-09-01
+EMP-017,Quinn Fabray,qfabray@company.com,HR,71000,3,2022-03-15
+EMP-018,Ripley Ellen,eripley@company.com,Engineering,130000,8,2019-01-20
+EMP-019,Sherlock Holmes,sholmes@company.com,Legal,145000,10,2016-07-14
+EMP-020,Tony Stark,tstark@company.com,Engineering,165000,11,2016-02-01

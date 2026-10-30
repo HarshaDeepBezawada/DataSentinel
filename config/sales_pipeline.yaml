@@ -1,0 +1,71 @@
+name: "B2B Sales Pipeline Deal Governance"
+
+source:
+  type: "csv"
+  name: "crm_deals"
+  options:
+    path: "data/sales_pipeline.csv"
+    delimiter: ","
+
+schema_baseline:
+  fingerprint_path: ".datasentinel/schemas/sales_pipeline_baseline.json"
+  auto_update: false
+
+rules:
+  - id: "RULE-SALES-001"
+    type: "null_check"
+    column: "deal_id"
+    description: "Every sales deal must have a registered deal identifier"
+    severity: "error"
+    params:
+      allow_nulls: false
+
+  - id: "RULE-SALES-002"
+    type: "unique_check"
+    column: "deal_id"
+    description: "Deal IDs must be unique across the CRM pipeline"
+    severity: "error"
+    params:
+      min_unique_rate: 1.0
+
+  - id: "RULE-SALES-003"
+    type: "range"
+    column: "probability"
+    description: "Win probability must be between 0.0 and 1.0 (inclusive)"
+    severity: "error"
+    params:
+      min_value: 0.0
+      max_value: 1.0
+      inclusive: true
+
+  - id: "RULE-SALES-004"
+    type: "foreign_key"
+    column: "stage"
+    description: "Stage must correspond to official CRM pipeline stages"
+    severity: "error"
+    params:
+      reference_values:
+        - "Prospecting"
+        - "Qualified"
+        - "Proposal"
+        - "Negotiation"
+        - "Closed Won"
+        - "Closed Lost"
+
+  - id: "RULE-SALES-005"
+    type: "regex"
+    column: "owner_email"
+    description: "Deal owner must be an authenticated internal sales representative"
+    severity: "error"
+    params:
+      pattern: "^[a-z]+@salescorp\\.com$"
+      full_match: true
+
+anomaly_detection:
+  enabled: true
+  columns:
+    - "deal_value"
+  method: "both"
+  zscore_threshold: 3.0
+  iqr_multiplier: 1.5
+  max_anomalies_to_report: 5

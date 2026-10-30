@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DataSentinel Quality Report - {{ result.pipeline_name }}</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --accent-blue: #38bdf8;
+      --accent-green: #22c55e;
+      --accent-red: #ef4444;
+      --accent-amber: #f59e0b;
+      --accent-purple: #a855f7;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 2rem;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .brand-icon {
+      background: linear-gradient(135deg, #38bdf8, #6366f1);
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: white;
+    }
+    .brand-title h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .brand-title p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    .meta-badge {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      text-align: right;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .meta-badge strong {
+      color: var(--accent-blue);
+    }
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--accent-blue);
+    }
+    .metric-card.success::before { background: var(--accent-green); }
+    .metric-card.danger::before { background: var(--accent-red); }
+    .metric-card.warning::before { background: var(--accent-amber); }
+    .metric-card.purple::before { background: var(--accent-purple); }
+
+    .metric-title {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    .metric-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Charts Grid */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 900px) {
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+    .chart-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .chart-box h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: var(--text-main);
+    }
+    .chart-container {
+      position: relative;
+      height: 260px;
+      width: 100%;
+    }
+
+    /* Tables */
+    .section-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+    .section-header h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    th {
+      background-color: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge-passed { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+    .badge-failed { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+    .badge-warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .badge-info { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+
+    .sample-code {
+      font-family: monospace;
+      font-size: 0.8rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: #cbd5e1;
+      max-width: 320px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border-color);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="brand-icon">🛡️</div>
+        <div class="brand-title">
+          <h1>DataSentinel Quality Report</h1>
+          <p>Pipeline: <strong>{{ result.pipeline_name }}</strong> | Target Source: {{ source_name }}</p>
+        </div>
+      </div>
+      <div class="meta-badge">
+        <div>Run ID: <strong>{{ result.run_id }}</strong></div>
+        <div>Generated: {{ result.timestamp }}</div>
+        <div>Execution: {{ result.duration_ms }} ms</div>
+      </div>
+    </header>
+
+    <!-- Executive Metrics Grid -->
+    <div class="metrics-grid">
+      <div class="metric-card {% if pass_rate >= 90 %}success{% elif pass_rate >= 70 %}warning{% else %}danger{% endif %}">
+        <div class="metric-title">Quality Pass Rate</div>
+        <div class="metric-value">{{ "%.1f"|format(pass_rate) }}%</div>
+        <div class="metric-subtitle">{{ result.rules_passed }} of {{ total_rules }} checks passed</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-title">Total Records</div>
+        <div class="metric-value">{{ "{:,}".format(result.total_rows) }}</div>
+        <div class="metric-subtitle">{{ result.total_columns }} Columns evaluated</div>
+      </div>
+
+      <div class="metric-card {% if result.rules_failed == 0 %}success{% else %}danger{% endif %}">
+        <div class="metric-title">Failed Quality Rules</div>
+        <div class="metric-value">{{ result.rules_failed }}</div>
+        <div class="metric-subtitle">{{ result.rules_warning }} Warning(s)</div>
+      </div>
+
+      <div class="metric-card {% if total_anomalies == 0 %}success{% else %}purple{% endif %}">
+        <div class="metric-title">Statistical Anomalies</div>
+        <div class="metric-value">{{ total_anomalies }}</div>
+        <div class="metric-subtitle">Z-Score & IQR Outliers</div>
+      </div>
+
+      <div class="metric-card {% if result.drift_report and result.drift_report.has_drift %}warning{% else %}success{% endif %}">
+        <div class="metric-title">Schema Drift Status</div>
+        <div class="metric-value">
+          {% if result.drift_report and result.drift_report.has_drift %}DRIFT{% else %}STABLE{% endif %}
+        </div>
+        <div class="metric-subtitle">
+          {% if result.drift_report %}{{ result.drift_report.diffs|length }} differences detected{% else %}Baseline not configured{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-grid">
+      <div class="chart-box">
+        <h3>Quality Rules Breakdown</h3>
+        <div class="chart-container">
+          <canvas id="ruleOutcomeChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-box">
+        <h3>Historical Trend (Pass Rate & Anomalies)</h3>
+        <div class="chart-container">
+          <canvas id="historyTrendChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rule Evaluation Details -->
+    <div class="section-box">
+      <div class="section-header">
+        <h2>Data Quality Rule Results</h2>
+        <span class="badge {% if result.rules_failed == 0 %}badge-passed{% else %}badge-failed{% endif %}">
+          {{ result.overall_status.upper() }}
+        </span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Rule ID</th>
+            <th>Type</th>
+            <th>Column</th>
+            <th>Failures / Total</th>
+            <th>Failure Rate</th>
+            <th>Diagnostic Message</th>
+            <th>Sample Violations</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in result.rule_results %}
+          <tr>
+            <td>
+              {% if r.passed %}
+                <span class="badge badge-passed">PASS</span>
+              {% elif r.status == 'warning' %}
+                <span class="badge badge-warning">WARN</span>
+              {% else %}
+                <span class="badge badge-failed">FAIL</span>
+              {% endif %}
+            </td>
+            <td><strong>{{ r.rule_id }}</strong></td>
+            <td><code>{{ r.rule_type }}</code></td>
+            <td>{{ r.column }}</td>
+            <td>{{ r.failed_rows }} / {{ r.total_rows }}</td>
+            <td>{{ "%.2f"|format(r.failure_rate * 100) }}%</td>
+            <td>{{ r.message }}</td>
+            <td>
+              {% if r.sample_failures %}
+                <span class="sample-code" title="{{ r.sample_failures }}">{{ r.sample_failures }}</span>
+              {% else %}
+                <span style="color: var(--text-muted);">-</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Statistical Anomaly Summary -->
+    {% if result.anomalies %}
+    <div class="section-box">
+      <div class="section-header">
+        <h2>Statistical Anomaly Detection (Z-Score & IQR)</h2>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Column</th>
+            <th>Method</th>
+            <th>Outliers Detected</th>
+            <th>Outlier Rate</th>
+            <th>Distribution Metrics</th>
+            <th>Sample Anomalies & Confidence</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in result.anomalies %}
+          <tr>
+            <td><strong>{{ a.column }}</strong></td>
+            <td><span class="badge badge-info">{{ a.method.upper() }}</span></td>
+            <td>{{ a.total_anomalies }}</td>
+            <td>{{ "%.2f"|format(a.anomaly_rate * 100) }}%</td>
+            <td>
+              {% if a.method == 'zscore' %}
+                &mu;={{ a.mean }}, &sigma;={{ a.std }}
+              {% else %}
+                Q1={{ a.q1 }}, Q3={{ a.q3 }}
+              {% endif %}
+            </td>
+            <td>
+              {% if a.sample_anomalies %}
+                {% for p in a.sample_anomalies[:3] %}
+                  <div>
+                    <code>val={{ p.value }}</code> (score: <strong>{{ "%.2f"|format(p.score) }}</strong>)
+                  </div>
+                {% endfor %}
+              {% else %}
+                <span style="color: var(--accent-green);">No outliers detected</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    <!-- Schema Drift Section -->
+    {% if result.drift_report %}
+    <div class="section-box">
+      <div class="section-header">
+        <h2>Schema Drift Report</h2>
+        <span class="badge {% if result.drift_report.has_drift %}badge-warning{% else %}badge-passed{% endif %}">
+          {% if result.drift_report.has_drift %}DRIFT DETECTED{% else %}IN SYNC{% endif %}
+        </span>
+      </div>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">{{ result.drift_report.summary }}</p>
+
+      {% if result.drift_report.diffs %}
+      <table>
+        <thead>
+          <tr>
+            <th>Change Type</th>
+            <th>Column Name</th>
+            <th>Baseline Expected</th>
+            <th>Current Found</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in result.drift_report.diffs %}
+          <tr>
+            <td>
+              <span class="badge {% if d.drift_type == 'added' %}badge-info{% elif d.drift_type == 'removed' %}badge-failed{% else %}badge-warning{% endif %}">
+                {{ d.drift_type.upper() }}
+              </span>
+            </td>
+            <td><strong>{{ d.column_name }}</strong></td>
+            <td>{{ d.baseline_value or '-' }}</td>
+            <td>{{ d.current_value or '-' }}</td>
+            <td>{{ d.message }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <footer>
+      Generated automatically by <strong>DataSentinel</strong> v0.1.0 • Enterprise Automated Data Quality Platform
+    </footer>
+  </div>
+
+  <script>
+    // Rule outcome breakdown donut chart
+    const ctxRule = document.getElementById('ruleOutcomeChart').getContext('2d');
+    new Chart(ctxRule, {
+      type: 'doughnut',
+      data: {
+        labels: ['Passed', 'Failed', 'Warnings'],
+        datasets: [{
+          data: [{{ result.rules_passed }}, {{ result.rules_failed }}, {{ result.rules_warning }}],
+          backgroundColor: ['#22c55e', '#ef4444', '#f59e0b'],
+          borderColor: '#1e293b',
+          borderWidth: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { color: '#94a3b8' } }
+        }
+      }
+    });
+
+    // Historical trend line chart
+    const ctxTrend = document.getElementById('historyTrendChart').getContext('2d');
+    const historyLabels = {{ history_labels | tojson }};
+    const historyPassRates = {{ history_pass_rates | tojson }};
+    const historyAnomalies = {{ history_anomalies | tojson }};
+
+    new Chart(ctxTrend, {
+      type: 'line',
+      data: {
+        labels: historyLabels.length > 0 ? historyLabels : ['Current Run'],
+        datasets: [
+          {
+            label: 'Pass Rate (%)',
+            data: historyPassRates.length > 0 ? historyPassRates : [{{ "%.1f"|format(pass_rate) }}],
+            borderColor: '#38bdf8',
+            backgroundColor: 'rgba(56, 189, 248, 0.1)',
+            fill: true,
+            tension: 0.3,
+            yAxisID: 'y'
+          },
+          {
+            label: 'Anomalies',
+            data: historyAnomalies.length > 0 ? historyAnomalies : [{{ total_anomalies }}],
+            borderColor: '#a855f7',
+            backgroundColor: 'rgba(168, 85, 247, 0.1)',
+            fill: false,
+            tension: 0.3,
+            yAxisID: 'y1'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+          y: {
+            min: 0,
+            max: 100,
+            ticks: { color: '#38bdf8' },
+            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+            title: { display: true, text: 'Pass Rate %', color: '#38bdf8' }
+          },
+          y1: {
+            position: 'right',
+            min: 0,
+            ticks: { color: '#a855f7' },
+            grid: { drawOnChartArea: false },
+            title: { display: true, text: 'Anomaly Count', color: '#a855f7' }
+          }
+        },
+        plugins: {
+          legend: { position: 'bottom', labels: { color: '#94a3b8' } }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+deal_id,deal_name,stage,deal_value,probability,owner_email,close_date
+DEAL-001,Acme Cloud Migration,Prospecting,25000,0.20,sarah@salescorp.com,2026-11-15
+DEAL-002,Global Logistics ERP,Proposal,120000,0.60,mike@salescorp.com,2026-12-01
+DEAL-003,FinTech Security Audit,Negotiation,85000,0.80,sarah@salescorp.com,2026-11-20
+,Mega Retail Revamp,Qualified,45000,0.40,alex@salescorp.com,2026-12-10
+DEAL-005,HealthCo Analytics,Closed Won,210000,1.00,lisa@salescorp.com,2026-10-25
+DEAL-006,GovAgency Portal,Negotiation,450000,1.50,alex@salescorp.com,2026-12-31
+DEAL-007,AutoMaker Telematics,Prospecting,18000,0.10,mike@salescorp.com,2027-01-15
+DEAL-008,BioLabs Trial,UnknownStage,62000,0.50,lisa@salescorp.com,2026-11-30
+DEAL-009,University LMS Upgrade,Proposal,95000,0.70,sarah@salescorp.com,2026-12-15
+DEAL-010,MegaWhale Sovereign Cloud,Negotiation,35000000,0.90,alex@salescorp.com,2026-12-20
+DEAL-002,Duplicate Deal Two,Proposal,120000,0.60,mike@salescorp.com,2026-12-01
+DEAL-012,CityTransit Smart Ticketing,Qualified,78000,0.30,lisa@salescorp.com,2027-02-01
+DEAL-013,AirCarrier Inflight Wifi,Prospecting,135000,0.25,mike@salescorp.com,2027-03-01
+DEAL-014,SolarEnergy Grid Management,Proposal,290000,0.65,sarah@salescorp.com,2026-12-05
+DEAL-015,Telecom 5G Tower Analytics,Closed Lost,160000,0.00,alex@salescorp.com,2026-10-20

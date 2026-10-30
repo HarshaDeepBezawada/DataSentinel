@@ -1,0 +1,81 @@
+name: "HR Employee Directory Quality Pipeline"
+
+source:
+  type: "csv"
+  name: "hr_employees"
+  options:
+    path: "data/hr_data.csv"
+    delimiter: ","
+
+schema_baseline:
+  fingerprint_path: ".datasentinel/schemas/hr_data_baseline.json"
+  auto_update: false
+
+rules:
+  - id: "RULE-HR-001"
+    type: "null_check"
+    column: "employee_id"
+    description: "Employee ID is mandatory for all personnel records"
+    severity: "error"
+    params:
+      allow_nulls: false
+
+  - id: "RULE-HR-002"
+    type: "unique_check"
+    column: "employee_id"
+    description: "Employee ID must be globally unique"
+    severity: "error"
+    params:
+      min_unique_rate: 1.0
+
+  - id: "RULE-HR-003"
+    type: "null_check"
+    column: "work_email"
+    description: "Corporate work email cannot be null"
+    severity: "error"
+    params:
+      allow_nulls: false
+
+  - id: "RULE-HR-004"
+    type: "regex"
+    column: "work_email"
+    description: "Work email must end with corporate domain @company.com"
+    severity: "warning"
+    params:
+      pattern: "^[a-zA-Z0-9._%+-]+@company\\.com$"
+      full_match: true
+
+  - id: "RULE-HR-005"
+    type: "range"
+    column: "years_experience"
+    description: "Experience must be non-negative and under 50 years"
+    severity: "error"
+    params:
+      min_value: 0
+      max_value: 50
+      inclusive: true
+
+  - id: "RULE-HR-006"
+    type: "foreign_key"
+    column: "department"
+    description: "Department must be an officially recognized organizational unit"
+    severity: "error"
+    params:
+      reference_values:
+        - "Engineering"
+        - "Marketing"
+        - "Sales"
+        - "HR"
+        - "Finance"
+        - "Legal"
+        - "Executive"
+
+anomaly_detection:
+  enabled: true
+  columns:
+    - "salary"
+    - "years_experience"
+  method: "both"
+  zscore_threshold: 3.0
+  iqr_multiplier: 1.5
+  max_anomalies_to_report: 10

@@ -1,0 +1,4 @@
+order_id,customer_email,total_amount,status,item_count,discount_rate,shipping_country
+ORD-2001,alice@example.com,120.50,completed,2,0.05,US
+ORD-2002,bob@example.com,45.00,completed,1,0.00,CA
+ORD-2003,charlie@example.com,not_a_number,shipped,4,0.10,UK
