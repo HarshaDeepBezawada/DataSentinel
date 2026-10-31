@@ -120,9 +120,13 @@ def test_json_connector_bad_nested_path(tmp_path: Path) -> None:
 def test_sql_connector_sqlite(tmp_path: Path) -> None:
     """Test SQLConnector with SQLite database and table/query."""
     db_file = tmp_path / "app.db"
-    with sqlite3.connect(db_file) as conn:
+    conn = sqlite3.connect(db_file)
+    try:
         conn.execute("CREATE TABLE users (id INTEGER, username TEXT)")
         conn.execute("INSERT INTO users VALUES (1, 'alice'), (2, 'bob')")
+        conn.commit()
+    finally:
+        conn.close()
 
     connector = SQLConnector(
         name="test_sqlite",
@@ -132,6 +136,7 @@ def test_sql_connector_sqlite(tmp_path: Path) -> None:
     ds = connector.fetch_data()
     assert ds.shape == (2, 2)
     assert "username" in ds.columns
+    connector.disconnect()
 
     # Test custom query
     connector_query = SQLConnector(
@@ -143,14 +148,19 @@ def test_sql_connector_sqlite(tmp_path: Path) -> None:
     )
     ds_query = connector_query.fetch_data()
     assert ds_query.shape == (1, 1)
+    connector_query.disconnect()
 
 
 def test_sql_connector_env_substitution(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Test sensitive database credentials expanded securely from env vars."""
     db_file = tmp_path / "env.db"
-    with sqlite3.connect(db_file) as conn:
+    conn = sqlite3.connect(db_file)
+    try:
         conn.execute("CREATE TABLE items (val TEXT)")
         conn.execute("INSERT INTO items VALUES ('item1')")
+        conn.commit()
+    finally:
+        conn.close()
 
     monkeypatch.setenv("SECURE_DB_PATH", str(db_file))
     connector = SQLConnector(
@@ -162,6 +172,31 @@ def test_sql_connector_env_substitution(monkeypatch: pytest.MonkeyPatch, tmp_pat
     )
     ds = connector.fetch_data()
     assert ds.shape == (1, 1)
+    connector.disconnect()
+
+
+def test_sql_connector_forbids_plaintext_passwords() -> None:
+    """Verify security hardening: plaintext passwords in options or URL are blocked."""
+    with pytest.raises(ConnectorError, match="Plaintext passwords in configuration are forbidden"):
+        SQLConnector(
+            name="unsafe_opt",
+            options={
+                "type": "postgres",
+                "user": "admin",
+                "password": "plain_secret_password",
+                "database": "proddb",
+                "table": "orders",
+            },
+        )
+
+    with pytest.raises(ConnectorError, match="Plaintext passwords in connection_url are forbidden"):
+        SQLConnector(
+            name="unsafe_url",
+            options={
+                "connection_url": "postgresql+psycopg2://admin:plain_secret_password@localhost:5432/proddb",
+                "table": "orders",
+            },
+        )
 
 
 def test_api_connector_mocked(monkeypatch: pytest.MonkeyPatch) -> None:

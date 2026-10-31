@@ -8,6 +8,7 @@ from typing import Any, Dict, Iterator, Optional
 import pandas as pd
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
+from sqlalchemy.pool import NullPool
 
 from datasentinel.connectors.base import BaseConnector
 from datasentinel.connectors.registry import ConnectorRegistry
@@ -47,6 +48,14 @@ class SQLConnector(BaseConnector):
         super().__init__(name, options)
         connection_url = str(self.options.get("connection_url") or self.options.get("url", ""))
 
+        # Strictly enforce credential hardening (no raw plaintext passwords)
+        raw_password = self.options.get("password")
+        if raw_password is not None and not (isinstance(raw_password, str) and raw_password.startswith("${") and raw_password.endswith("}")):
+            raise ConnectorError(
+                f"SQLConnector '{name}': Plaintext passwords in configuration are forbidden for security. "
+                "Use 'password_env: DB_PASSWORD' or '${DB_PASSWORD}'."
+            )
+
         # Check for password_env option or environment variable placeholders
         if not connection_url:
             db_type = str(self.options.get("type", "sqlite")).lower()
@@ -56,7 +65,7 @@ class SQLConnector(BaseConnector):
             elif db_type in ("postgresql", "postgres"):
                 user = self.options.get("user", "postgres")
                 pwd_env = self.options.get("password_env")
-                password = os.getenv(pwd_env) if pwd_env else self.options.get("password", "")
+                password = os.getenv(pwd_env) if pwd_env else (raw_password or "")
                 host = self.options.get("host", "localhost")
                 port = self.options.get("port", 5432)
                 db_name = self.options.get("database", "postgres")
@@ -64,6 +73,17 @@ class SQLConnector(BaseConnector):
 
         if not connection_url:
             raise ConnectorError(f"SQLConnector '{name}': 'connection_url' or DB connection details required.")
+
+        # Check connection_url for unescaped plaintext passwords
+        if "://" in connection_url and "@" in connection_url:
+            match = re.search(r"://([^:]+):([^@]+)@", connection_url)
+            if match:
+                pass_part = match.group(2)
+                if not (pass_part.startswith("${") and pass_part.endswith("}")):
+                    raise ConnectorError(
+                        f"SQLConnector '{name}': Plaintext passwords in connection_url are forbidden for security. "
+                        "Use environment variables (e.g., '${DB_PASSWORD}')."
+                    )
 
         # Expand any ${VAR} syntax in the connection URL
         self.connection_url = _resolve_env_placeholders(connection_url)
@@ -81,7 +101,7 @@ class SQLConnector(BaseConnector):
             try:
                 # Configure pooling and timeout for robust connection management
                 if self.connection_url.startswith("sqlite"):
-                    self._engine = create_engine(self.connection_url)
+                    self._engine = create_engine(self.connection_url, poolclass=NullPool)
                 else:
                     self._engine = create_engine(
                         self.connection_url,

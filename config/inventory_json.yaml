@@ -1,0 +1,80 @@
+name: "Inventory Products JSON Pipeline"
+
+source:
+  type: "json"
+  name: "inventory_json_source"
+  options:
+    path: "data/inventory_products.json"
+    nested_path: "data.items"
+
+schema_baseline:
+  fingerprint_path: ".datasentinel/schemas/inventory_json_baseline.json"
+  auto_update: false
+
+rules:
+  - id: "RULE-INV-001"
+    type: "null_check"
+    column: "product_id"
+    description: "Product ID must not be null"
+    severity: "error"
+    params:
+      allow_nulls: false
+
+  - id: "RULE-INV-002"
+    type: "unique_check"
+    column: "product_id"
+    description: "Product ID must be strictly unique"
+    severity: "error"
+    params:
+      min_unique_rate: 1.0
+
+  - id: "RULE-INV-003"
+    type: "regex"
+    column: "sku"
+    description: "SKU must match SKU pattern (e.g., SKU-ELEC-01)"
+    severity: "error"
+    params:
+      pattern: "^SKU-[A-Z]{3,4}-[0-9]{2}$"
+      full_match: true
+
+  - id: "RULE-INV-004"
+    type: "range"
+    column: "unit_price"
+    description: "Unit price must be positive and not exceed $5,000"
+    severity: "error"
+    params:
+      min_value: 0.01
+      max_value: 5000.00
+      inclusive: true
+
+  - id: "RULE-INV-005"
+    type: "range"
+    column: "stock_quantity"
+    description: "Stock quantity cannot be negative"
+    severity: "error"
+    params:
+      min_value: 0
+      max_value: 100000
+      inclusive: true
+
+  - id: "RULE-INV-006"
+    type: "foreign_key"
+    column: "category"
+    description: "Category must be one of approved inventory categories"
+    severity: "warning"
+    params:
+      reference_values:
+        - "Electronics"
+        - "Office"
+        - "Furniture"
+        - "Accessories"
+
+anomaly_detection:
+  enabled: true
+  columns:
+    - "unit_price"
+    - "stock_quantity"
+  method: "both"
+  zscore_threshold: 3.0
+  iqr_multiplier: 1.5
+  max_anomalies_to_report: 5

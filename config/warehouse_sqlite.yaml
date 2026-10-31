@@ -1,0 +1,61 @@
+name: "Warehouse Stock SQLite Pipeline"
+
+source:
+  type: "sqlite"
+  name: "warehouse_sqlite_source"
+  options:
+    connection_url: "sqlite:///data/warehouse.db"
+    table: "warehouse_stock"
+
+schema_baseline:
+  fingerprint_path: ".datasentinel/schemas/warehouse_sqlite_baseline.json"
+  auto_update: false
+
+rules:
+  - id: "RULE-WH-001"
+    type: "null_check"
+    column: "bin_id"
+    description: "Bin ID primary key must not be null"
+    severity: "error"
+    params:
+      allow_nulls: false
+
+  - id: "RULE-WH-002"
+    type: "unique_check"
+    column: "bin_id"
+    description: "Bin ID must be unique across all storage bins"
+    severity: "error"
+    params:
+      min_unique_rate: 1.0
+
+  - id: "RULE-WH-003"
+    type: "range"
+    column: "quantity_on_hand"
+    description: "Quantity on hand cannot be negative"
+    severity: "error"
+    params:
+      min_value: 0
+      max_value: 1000000
+      inclusive: true
+
+  - id: "RULE-WH-004"
+    type: "foreign_key"
+    column: "aisle_zone"
+    description: "Aisle zone must be one of the warehouse operational zones"
+    severity: "error"
+    params:
+      reference_values:
+        - "ZONE-A"
+        - "ZONE-B"
+        - "ZONE-C"
+        - "ZONE-D"
+
+anomaly_detection:
+  enabled: true
+  columns:
+    - "quantity_on_hand"
+    - "reserved_quantity"
+  method: "both"
+  zscore_threshold: 3.0
+  iqr_multiplier: 1.5
+  max_anomalies_to_report: 5

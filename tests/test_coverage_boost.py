@@ -48,15 +48,20 @@ def test_dataset_to_dataframe_from_chunks() -> None:
 def test_sql_connector_stream_chunks_and_errors(tmp_path: Path) -> None:
     """Test SQLConnector streaming chunks and graceful failure messages."""
     db_file = tmp_path / "stream.db"
-    with sqlite3.connect(db_file) as conn:
+    conn = sqlite3.connect(db_file)
+    try:
         conn.execute("CREATE TABLE records (num INTEGER)")
         conn.executemany("INSERT INTO records VALUES (?)", [(i,) for i in range(10)])
+        conn.commit()
+    finally:
+        conn.close()
 
     connector = SQLConnector(
         name="sql_stream",
         options={"connection_url": f"sqlite:///{db_file}", "table": "records"},
     )
     chunks = list(connector.stream_chunks(chunk_size=4))
+    connector.disconnect()
     assert len(chunks) == 3
     assert len(chunks[0]) == 4
     assert len(chunks[1]) == 4

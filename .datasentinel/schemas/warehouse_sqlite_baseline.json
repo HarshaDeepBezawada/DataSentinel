@@ -1,0 +1,64 @@
+{
+  "dataset_name": "warehouse_sqlite_source",
+  "column_count": 7,
+  "row_count": 10,
+  "columns": {
+    "bin_id": {
+      "name": "bin_id",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 10,
+      "total_count": 10
+    },
+    "warehouse_code": {
+      "name": "warehouse_code",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 4,
+      "total_count": 10
+    },
+    "sku": {
+      "name": "sku",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 10,
+      "total_count": 10
+    },
+    "quantity_on_hand": {
+      "name": "quantity_on_hand",
+      "dtype": "int64",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 10,
+      "total_count": 10
+    },
+    "reserved_quantity": {
+      "name": "reserved_quantity",
+      "dtype": "int64",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 10,
+      "total_count": 10
+    },
+    "max_capacity": {
+      "name": "max_capacity",
+      "dtype": "int64",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 8,
+      "total_count": 10
+    },
+    "aisle_zone": {
+      "name": "aisle_zone",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 4,
+      "total_count": 10
+    }
+  },
+  "generated_at": "2026-10-31T12:52:16.174239+00:00"
+}

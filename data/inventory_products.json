@@ -1,0 +1,101 @@
+{
+  "status": "success",
+  "metadata": {
+    "version": "2.0",
+    "exported_by": "InventoryService"
+  },
+  "data": {
+    "items": [
+      {
+        "product_id": "PRD-101",
+        "sku": "SKU-ELEC-01",
+        "name": "Wireless Ergonomic Mouse",
+        "category": "Electronics",
+        "unit_price": 49.99,
+        "stock_quantity": 150,
+        "reorder_level": 20
+      },
+      {
+        "product_id": "PRD-102",
+        "sku": "SKU-ELEC-02",
+        "name": "Mechanical Keyboard",
+        "category": "Electronics",
+        "unit_price": 119.5,
+        "stock_quantity": 85,
+        "reorder_level": 15
+      },
+      {
+        "product_id": "PRD-103",
+        "sku": "SKU-OFFC-01",
+        "name": "Desk Mat XL",
+        "category": "Office",
+        "unit_price": 24.0,
+        "stock_quantity": 230,
+        "reorder_level": 30
+      },
+      {
+        "product_id": "PRD-104",
+        "sku": "SKU-ELEC-03",
+        "name": "USB-C Dual Dock",
+        "category": "Electronics",
+        "unit_price": 189.99,
+        "stock_quantity": 42,
+        "reorder_level": 10
+      },
+      {
+        "product_id": "PRD-105",
+        "sku": "SKU-OFFC-02",
+        "name": "Ergonomic Mesh Chair",
+        "category": "Furniture",
+        "unit_price": 349.0,
+        "stock_quantity": 18,
+        "reorder_level": 5
+      },
+      {
+        "product_id": "PRD-106",
+        "sku": "SKU-ELEC-04",
+        "name": "4K IPS Monitor 27in",
+        "category": "Electronics",
+        "unit_price": 399.99,
+        "stock_quantity": 34,
+        "reorder_level": 8
+      },
+      {
+        "product_id": "PRD-107",
+        "sku": "SKU-OFFC-03",
+        "name": "Cable Management Spine",
+        "category": "Office",
+        "unit_price": 18.5,
+        "stock_quantity": 110,
+        "reorder_level": 25
+      },
+      {
+        "product_id": "PRD-108",
+        "sku": "SKU-ELEC-05",
+        "name": "Noise Cancelling Headphones",
+        "category": "Electronics",
+        "unit_price": 279.0,
+        "stock_quantity": 65,
+        "reorder_level": 12
+      },
+      {
+        "product_id": "PRD-109",
+        "sku": "SKU-ACC-01",
+        "name": "Screen Cleaning Kit",
+        "category": "Accessories",
+        "unit_price": 12.99,
+        "stock_quantity": 400,
+        "reorder_level": 50
+      },
+      {
+        "product_id": "PRD-110",
+        "sku": "SKU-ACC-02",
+        "name": "Aluminum Laptop Stand",
+        "category": "Accessories",
+        "unit_price": 45.0,
+        "stock_quantity": 95,
+        "reorder_level": 20
+      }
+    ]
+  }
+}

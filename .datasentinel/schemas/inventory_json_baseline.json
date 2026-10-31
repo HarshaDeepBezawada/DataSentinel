@@ -1,0 +1,64 @@
+{
+  "dataset_name": "inventory_json_source",
+  "column_count": 7,
+  "row_count": 10,
+  "columns": {
+    "product_id": {
+      "name": "product_id",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 10,
+      "total_count": 10
+    },
+    "sku": {
+      "name": "sku",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 10,
+      "total_count": 10
+    },
+    "name": {
+      "name": "name",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 10,
+      "total_count": 10
+    },
+    "category": {
+      "name": "category",
+      "dtype": "str",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 4,
+      "total_count": 10
+    },
+    "unit_price": {
+      "name": "unit_price",
+      "dtype": "float64",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 10,
+      "total_count": 10
+    },
+    "stock_quantity": {
+      "name": "stock_quantity",
+      "dtype": "int64",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 10,
+      "total_count": 10
+    },
+    "reorder_level": {
+      "name": "reorder_level",
+      "dtype": "int64",
+      "nullable": false,
+      "null_count": 0,
+      "unique_count": 9,
+      "total_count": 10
+    }
+  },
+  "generated_at": "2026-10-31T12:52:11.766988+00:00"
+}

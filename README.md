@@ -2,9 +2,11 @@
 
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/)
 [![Type Safety: mypy strict](https://img.shields.io/badge/mypy-strict%20mode-brightgreen.svg)](https://mypy.readthedocs.io/)
-[![Coverage: >80%](https://img.shields.io/badge/coverage-83%25-brightgreen.svg)](https://pytest.org/)
+[![Coverage: >80%](https://img.shields.io/badge/coverage-84%25-brightgreen.svg)](https://pytest.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![CLI: Typer & Rich](https://img.shields.io/badge/CLI-Typer%20%2B%20Rich-orange.svg)](https://typer.tiangolo.com/)
+
+> 📹 **5-Minute Project Demo Walkthrough**: [Watch the video demonstration on YouTube / Loom](https://youtu.be/YOUR_DEMO_VIDEO_ID) (See [DEMO_SCRIPT.md](file:///c:/Users/harsh/Downloads/DataSentiel/DEMO_SCRIPT.md) for script details)
 
 **DataSentinel** is an enterprise-grade automated data quality and pipeline observability platform. It connects seamlessly to multi-source data repositories (CSV, Excel, JSON, SQLite, PostgreSQL, REST APIs), validates data against declarative YAML quality rules with Pydantic v2 schemas, detects schema drift against historical baselines, flags statistical outliers via streaming Z-Score and IQR Tukey fences, generates executive-ready HTML and PDF reports with embedded charts, and broadcasts alerts to Slack and SMTP without exposing raw records.
 
@@ -105,14 +107,19 @@ flowchart TD
 Install the package in development/editable mode:
 
 ```bash
-git clone https://github.com/your-org/datasentinel.git
-cd datasentinel
+git clone https://github.com/HarshaDeepBezawada/DataSentinel.git
+cd DataSentinel
 pip install -e ".[dev]"
 ```
 
 Or install the standalone pre-built wheel from `dist/`:
 ```bash
 pip install dist/datasentinel-0.1.0-py3-none-any.whl
+```
+
+Or install via TestPyPI:
+```bash
+pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ datasentinel
 ```
 
 Verify installation:
