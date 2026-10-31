@@ -1,7 +1,6 @@
 """Verification and benchmark test for 500,000-row dataset streaming anomaly detection."""
 
 import os
-import psutil
 import numpy as np
 import pandas as pd
 import pytest
@@ -9,6 +8,14 @@ import pytest
 from datasentinel.anomaly.iqr import IQRAnomalyDetector
 from datasentinel.anomaly.zscore import ZScoreAnomalyDetector
 from datasentinel.core.dataset import DataSet
+
+try:
+    import psutil
+    def get_memory_mb() -> float:
+        return float(psutil.Process(os.getpid()).memory_info().rss / (1024 * 1024))
+except ImportError:
+    def get_memory_mb() -> float:
+        return 0.0
 
 
 def test_500k_rows_streaming_anomaly_detection() -> None:
@@ -37,8 +44,7 @@ def test_500k_rows_streaming_anomaly_detection() -> None:
             row_cursor += size
             yield pd.DataFrame({"metric_value": data})
 
-    process = psutil.Process(os.getpid())
-    mem_before_mb = process.memory_info().rss / (1024 * 1024)
+    mem_before_mb = get_memory_mb()
 
     dataset = DataSet(
         name="large_dataset_500k",
@@ -50,7 +56,7 @@ def test_500k_rows_streaming_anomaly_detection() -> None:
     z_detector = ZScoreAnomalyDetector(threshold=3.0, max_samples=10)
     z_summary = z_detector.detect(dataset, "metric_value")
 
-    mem_after_z_mb = process.memory_info().rss / (1024 * 1024)
+    mem_after_z_mb = get_memory_mb()
     mem_growth_mb = mem_after_z_mb - mem_before_mb
 
     assert z_summary.total_anomalies >= 2
@@ -62,7 +68,7 @@ def test_500k_rows_streaming_anomaly_detection() -> None:
     iqr_detector = IQRAnomalyDetector(multiplier=1.5, max_samples=10)
     iqr_summary = iqr_detector.detect(dataset, "metric_value")
 
-    mem_after_iqr_mb = process.memory_info().rss / (1024 * 1024)
+    mem_after_iqr_mb = get_memory_mb()
 
     assert iqr_summary.total_anomalies >= 2
     iqr_vals = [p.value for p in iqr_summary.sample_anomalies]
