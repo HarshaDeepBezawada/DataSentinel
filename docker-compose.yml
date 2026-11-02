@@ -1,0 +1,10 @@
+services:
+  datasentinel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./config:/workspace/config:ro
+      - ./data:/workspace/data:ro
+      - ./reports:/workspace/reports
+    command: ["validate", "config/ecommerce_orders.yaml"]

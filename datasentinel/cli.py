@@ -132,6 +132,17 @@ def validate_command(
         "-q",
         help="Suppress progress bars and verbose messages.",
     ),
+    export_json: Optional[Path] = typer.Option(
+        None,
+        "--export-json",
+        "-j",
+        help="Export machine-readable validation metrics to a JSON file.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output raw JSON summary directly to stdout for Airflow/CI orchestrators.",
+    ),
 ) -> None:
     """Validate data sources against YAML quality rules and detect anomalies.
 
@@ -139,9 +150,11 @@ def validate_command(
     Examples:
       datasentinel validate config/ecommerce_orders.yaml
       datasentinel validate config/hr_data.yaml --quiet
+      datasentinel validate config/ecommerce_orders.yaml --export-json run_metrics.json
+      datasentinel validate config/sales_pipeline.yaml --json
     """
     try:
-        if not quiet:
+        if not quiet and not json_output:
             console.print(
                 Panel.fit(
                     f"[bold blue]DataSentinel Validator[/bold blue]\n[dim]Loading config: {config}[/dim]",
@@ -149,61 +162,74 @@ def validate_command(
                 )
             )
 
-        result = _run_pipeline(config, show_progress=not quiet)
+        result = _run_pipeline(config, show_progress=(not quiet and not json_output))
 
-        # Output Summary Table
-        summary_table = Table(title=f"Validation Run Summary: {result.pipeline_name}", border_style="cyan")
-        summary_table.add_column("Metric", style="bold")
-        summary_table.add_column("Value")
+        if json_output:
+            # Print raw JSON directly to stdout for Airflow / CI consumption
+            typer.echo(result.model_dump_json(indent=2))
+        else:
+            # Output Summary Table
+            summary_table = Table(title=f"Validation Run Summary: {result.pipeline_name}", border_style="cyan")
+            summary_table.add_column("Metric", style="bold")
+            summary_table.add_column("Value")
 
-        summary_table.add_row("Run ID", result.run_id)
-        summary_table.add_row("Execution Time", f"{result.duration_ms:.2f} ms")
-        summary_table.add_row("Total Records", f"{result.total_rows:,}")
-        summary_table.add_row("Total Columns", str(result.total_columns))
-        summary_table.add_row("Passed Rules", f"[green]{result.rules_passed}[/green]")
-        summary_table.add_row("Failed Rules", f"[red]{result.rules_failed}[/red]" if result.rules_failed > 0 else "0")
-        summary_table.add_row("Warnings", f"[yellow]{result.rules_warning}[/yellow]" if result.rules_warning > 0 else "0")
+            summary_table.add_row("Run ID", result.run_id)
+            summary_table.add_row("Execution Time", f"{result.duration_ms:.2f} ms")
+            summary_table.add_row("Total Records", f"{result.total_rows:,}")
+            summary_table.add_row("Total Columns", str(result.total_columns))
+            summary_table.add_row("Passed Rules", f"[green]{result.rules_passed}[/green]")
+            summary_table.add_row("Failed Rules", f"[red]{result.rules_failed}[/red]" if result.rules_failed > 0 else "0")
+            summary_table.add_row("Warnings", f"[yellow]{result.rules_warning}[/yellow]" if result.rules_warning > 0 else "0")
 
-        total_anomalies = sum(a.total_anomalies for a in result.anomalies)
-        summary_table.add_row("Anomalies Found", f"[magenta]{total_anomalies}[/magenta]")
+            total_anomalies = sum(a.total_anomalies for a in result.anomalies)
+            summary_table.add_row("Anomalies Found", f"[magenta]{total_anomalies}[/magenta]")
 
-        if result.drift_report:
-            drift_str = (
-                f"[yellow]DRIFT DETECTED ({len(result.drift_report.diffs)} diffs)[/yellow]"
-                if result.drift_report.has_drift
-                else "[green]STABLE (in sync with baseline)[/green]"
-            )
-            summary_table.add_row("Schema Drift", drift_str)
+            if result.drift_report:
+                drift_str = (
+                    f"[yellow]DRIFT DETECTED ({len(result.drift_report.diffs)} diffs)[/yellow]"
+                    if result.drift_report.has_drift
+                    else "[green]STABLE (in sync with baseline)[/green]"
+                )
+                summary_table.add_row("Schema Drift", drift_str)
 
-        status_style = "green" if result.overall_status == ValidationStatus.PASSED else "red"
-        summary_table.add_row("Overall Status", f"[{status_style}][bold]{result.overall_status.value.upper()}[/bold][/{status_style}]")
+            status_style = "green" if result.overall_status == ValidationStatus.PASSED else "red"
+            summary_table.add_row("Overall Status", f"[{status_style}][bold]{result.overall_status.value.upper()}[/bold][/{status_style}]")
 
-        console.print(summary_table)
+            console.print(summary_table)
 
-        # Rules Detail Table
-        rule_table = Table(title="Rule Evaluation Breakdown", border_style="dim")
-        rule_table.add_column("Rule ID", style="bold")
-        rule_table.add_column("Type")
-        rule_table.add_column("Column")
-        rule_table.add_column("Status")
-        rule_table.add_column("Violations")
-        rule_table.add_column("Details")
+            # Rules Detail Table
+            rule_table = Table(title="Rule Evaluation Breakdown", border_style="dim")
+            rule_table.add_column("Rule ID", style="bold")
+            rule_table.add_column("Type")
+            rule_table.add_column("Column")
+            rule_table.add_column("Status")
+            rule_table.add_column("Violations")
+            rule_table.add_column("Details")
 
-        for r in result.rule_results:
-            status_badge = (
-                "[green]PASS[/green]"
-                if r.passed
-                else ("[yellow]WARN[/yellow]" if r.status == ValidationStatus.WARNING else "[red]FAIL[/red]")
-            )
-            rule_table.add_row(
-                r.rule_id,
-                r.rule_type,
-                r.column,
-                status_badge,
-                f"{r.failed_rows}/{r.total_rows} ({r.failure_rate * 100:.1f}%)",
-                r.message,
-            )
-        console.print(rule_table)
+            for r in result.rule_results:
+                status_badge = (
+                    "[green]PASS[/green]"
+                    if r.passed
+                    else ("[yellow]WARN[/yellow]" if r.status == ValidationStatus.WARNING else "[red]FAIL[/red]")
+                )
+                rule_table.add_row(
+                    r.rule_id,
+                    r.rule_type,
+                    r.column,
+                    status_badge,
+                    f"{r.failed_rows}/{r.total_rows} ({r.failure_rate * 100:.1f}%)",
+                    r.message,
+                )
+            console.print(rule_table)
+
+        if export_json:
+            export_json.parent.mkdir(parents=True, exist_ok=True)
+            export_json.write_text(result.model_dump_json(indent=2), encoding="utf-8")
+            if not json_output:
+                console.print(f"[bold green][OK][/bold green] Exported machine-readable JSON metrics to: {export_json}")
+
+        if result.overall_status == ValidationStatus.FAILED:
+            raise typer.Exit(code=1)
 
         if result.overall_status == ValidationStatus.FAILED:
             raise typer.Exit(code=1)

@@ -63,3 +63,25 @@ def test_cli_compare_schemas() -> None:
     assert result.exit_code == 0
     assert "REMOVED" in result.stdout
     assert "ADDED" in result.stdout
+
+
+def test_cli_validate_json_flags(tmp_path: Path) -> None:
+    """Test --export-json and --json flags for pipeline orchestration integration."""
+    json_export = tmp_path / "metrics.json"
+    result = runner.invoke(app, [
+        "validate",
+        "config/inventory_json.yaml",
+        "--export-json", str(json_export),
+    ])
+    assert result.exit_code == 0
+    assert json_export.exists()
+    assert "Exported machine-readable JSON metrics" in result.stdout
+
+    # Test stdout json output
+    res_stdout = runner.invoke(app, [
+        "validate",
+        "config/inventory_json.yaml",
+        "--json",
+    ])
+    assert res_stdout.exit_code == 0
+    assert '"pipeline_name": "Inventory Products JSON Pipeline"' in res_stdout.stdout

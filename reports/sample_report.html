@@ -234,13 +234,13 @@
         <div class="brand-icon">🛡️</div>
         <div class="brand-title">
           <h1>DataSentinel Quality Report</h1>
-          <p>Pipeline: <strong>E-Commerce Orders Validation</strong> | Target Source: orders_csv</p>
+          <p>Pipeline: <strong>E-Commerce Orders Validation</strong> | Target Source: Primary</p>
         </div>
       </div>
       <div class="meta-badge">
-        <div>Run ID: <strong>run-d5eff1eb</strong></div>
-        <div>Generated: 2026-10-31 12:55:47 UTC</div>
-        <div>Execution: 17.8 ms</div>
+        <div>Run ID: <strong>run-ee06776b</strong></div>
+        <div>Generated: 2026-11-02 09:28:43 UTC</div>
+        <div>Execution: 8.6 ms</div>
       </div>
     </header>
 
@@ -596,9 +596,9 @@
 
     // Historical trend line chart
     const ctxTrend = document.getElementById('historyTrendChart').getContext('2d');
-    const historyLabels = ["6:34 UTC", "3:06 UTC", "3:06 UTC", "3:32 UTC", "3:32 UTC", "5:04 UTC", "5:05 UTC", "5:47 UTC"];
-    const historyPassRates = [16.7, 16.7, 16.7, 16.7, 16.7, 16.7, 16.7, 16.7];
-    const historyAnomalies = [5, 5, 5, 5, 5, 5, 5, 5];
+    const historyLabels = [];
+    const historyPassRates = [];
+    const historyAnomalies = [];
 
     new Chart(ctxTrend, {
       type: 'line',

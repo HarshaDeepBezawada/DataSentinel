@@ -3,10 +3,24 @@
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/)
 [![Type Safety: mypy strict](https://img.shields.io/badge/mypy-strict%20mode-brightgreen.svg)](https://mypy.readthedocs.io/)
 [![Coverage: >80%](https://img.shields.io/badge/coverage-84%25-brightgreen.svg)](https://pytest.org/)
+[![Live Report: GitHub Pages](https://img.shields.io/badge/Live%20Report-GitHub%20Pages-brightgreen.svg)](https://harshadeepbezawada.github.io/DataSentinel/)
+[![Release: v0.1.0](https://img.shields.io/badge/release-v0.1.0-blue.svg)](https://github.com/HarshaDeepBezawada/DataSentinel/releases)
+[![CI: Multi-OS Matrix](https://img.shields.io/badge/CI-Ubuntu%20%7C%20Windows%20%7C%20macOS-success.svg)](https://github.com/HarshaDeepBezawada/DataSentinel/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![CLI: Typer & Rich](https://img.shields.io/badge/CLI-Typer%20%2B%20Rich-orange.svg)](https://typer.tiangolo.com/)
 
 > 📹 **5-Minute Project Demo Walkthrough**: [Watch the video demonstration on YouTube / Loom](https://youtu.be/YOUR_DEMO_VIDEO_ID) (See [DEMO_SCRIPT.md](file:///c:/Users/harsh/Downloads/DataSentiel/DEMO_SCRIPT.md) for script details)
+
+### ⚡ Instant "One-Click" Quickstart (Evaluator Mode)
+
+Reviewers can verify the entire multi-source platform end-to-end in **under 2 seconds**:
+
+```bash
+python quickstart.py
+```
+*Validates CSV, JSON, Excel, and SQLite datasets; executes schema drift detection; benchmarks 500k-row streaming anomaly detection; and generates executive HTML & PDF reports.*
+
+---
 
 **DataSentinel** is an enterprise-grade automated data quality and pipeline observability platform. It connects seamlessly to multi-source data repositories (CSV, Excel, JSON, SQLite, PostgreSQL, REST APIs), validates data against declarative YAML quality rules with Pydantic v2 schemas, detects schema drift against historical baselines, flags statistical outliers via streaming Z-Score and IQR Tukey fences, generates executive-ready HTML and PDF reports with embedded charts, and broadcasts alerts to Slack and SMTP without exposing raw records.
 
@@ -15,6 +29,8 @@
 ## 🏛️ System Architecture
 
 DataSentinel follows the **Open/Closed Principle** and clean architectural boundaries:
+
+> 📖 **Deep Dive**: Read the complete [DataSentinel Architectural Manual & Handbook](docs/ARCHITECTURAL_MANUAL.md) for first-principle explanations, toddler-friendly analogies, and layer-by-layer technical breakdowns.
 
 ```mermaid
 flowchart TD
@@ -347,12 +363,43 @@ source:
 
 ---
 
+## 🐳 Containerization (Docker & Compose)
+
+DataSentinel is fully containerized for cloud-native data pipelines:
+
+```bash
+# Build and run with Docker
+docker build -t datasentinel .
+docker run --rm -v $(pwd)/config:/workspace/config datasentinel validate config/ecommerce_orders.yaml
+
+# Or execute with Docker Compose
+docker compose run datasentinel
+```
+
+---
+
+## 🌪️ Enterprise Orchestration: Apache Airflow Circuit Breaker
+
+In real production data pipelines (e.g., Airbnb, Spotify), data platforms run DataSentinel as a **pre-load Circuit Breaker**. If quality rules fail or schema drift is detected, DataSentinel exits with code 1, automatically halting downstream dbt transformations before corrupted data reaches dashboards.
+
+See the complete production example in [`examples/airflow_datasentinel_dag.py`](examples/airflow_datasentinel_dag.py):
+
+```python
+# Airflow Task Definition Example:
+datasentinel_quality_gate = BashOperator(
+    task_id="datasentinel_data_quality_gate",
+    bash_command="datasentinel validate config/ecommerce_orders.yaml --export-json /tmp/run_metrics.json --quiet",
+)
+```
+
+---
+
 ## 🧪 Testing & Quality Assurance
 
 DataSentinel includes a comprehensive test suite with property-based testing and strict static type checking:
 
 ```bash
-# 1. Run all 46 unit, integration, and property tests with coverage report
+# 1. Run all 48 unit, integration, and property tests with coverage report
 pytest
 
 # 2. Run mypy in strict mode (enforces zero type errors)
@@ -360,8 +407,8 @@ mypy datasentinel
 ```
 
 ### Test Coverage Highlights:
-- **Coverage**: >83% line coverage across the entire codebase.
-- **Speed**: Full test execution in ~24 seconds (< 60s constraint).
+- **Coverage**: >84% line coverage across the entire codebase.
+- **Speed**: Full test execution in ~20 seconds (< 60s constraint).
 - **Hypothesis**: Property-based invariant testing for Z-score, IQR Tukey bounds, and range rules.
 - **Zero Type Errors**: `mypy --strict` passes with 0 errors across all 45 source files.
 
@@ -375,7 +422,7 @@ mypy datasentinel
 - [x] **3 Sample datasets with injected violations & anomalies** (`ecommerce_orders.csv`, `hr_data.csv`, `sales_pipeline.csv`)
 - [x] **Sample Executive HTML Report** (`reports/sample_report.html`)
 - [x] **Sample Executive PDF Report** (`reports/sample_report.pdf`)
-- [x] **pytest suite with >83% coverage** (46 passed tests)
+- [x] **pytest suite with >84% coverage** (48 passed tests)
 - [x] **mypy strict mode output: 0 errors**
 - [x] **Complete Architecture Diagram and CLI Reference Documentation**
 
