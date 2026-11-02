@@ -231,9 +231,6 @@ def validate_command(
         if result.overall_status == ValidationStatus.FAILED:
             raise typer.Exit(code=1)
 
-        if result.overall_status == ValidationStatus.FAILED:
-            raise typer.Exit(code=1)
-
     except DataSentinelError as e:
         console.print(f"[bold red]DataSentinel Error:[/bold red] {e}")
         raise typer.Exit(code=2)
