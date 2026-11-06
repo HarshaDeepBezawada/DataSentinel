@@ -1,7 +1,7 @@
 """Pytest fixtures for DataSentinel test suite."""
 
-from collections.abc import Iterator
 import tempfile
+from collections.abc import Iterator
 from pathlib import Path
 
 import pandas as pd

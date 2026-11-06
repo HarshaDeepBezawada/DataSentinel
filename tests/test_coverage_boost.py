@@ -1,7 +1,7 @@
 """Additional targeted tests to maximize test coverage."""
 
-from collections.abc import Iterator
 import sqlite3
+from collections.abc import Iterator
 from pathlib import Path
 
 import httpx

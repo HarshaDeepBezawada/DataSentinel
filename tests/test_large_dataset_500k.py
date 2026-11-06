@@ -1,7 +1,7 @@
 """Verification and benchmark test for 500,000-row dataset streaming anomaly detection."""
 
-from collections.abc import Iterator
 import os
+from collections.abc import Iterator
 
 import numpy as np
 import pandas as pd

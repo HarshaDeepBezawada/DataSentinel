@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
+from pydantic import ValidationError
 
 from datasentinel.core.dataset import DataSet
 from datasentinel.core.exceptions import ConfigurationError, RuleValidationError
@@ -11,6 +12,7 @@ from datasentinel.core.types import ValidationStatus
 from datasentinel.rules.executor import RuleExecutor
 from datasentinel.rules.foreign_key_check import ForeignKeyRule
 from datasentinel.rules.loader import RuleLoader
+from datasentinel.rules.models import RegexCheckConfig
 from datasentinel.rules.null_check import NullCheckRule
 from datasentinel.rules.range_check import RangeCheckRule
 from datasentinel.rules.regex_check import RegexCheckRule
@@ -77,6 +79,50 @@ def test_regex_check_rule() -> None:
     assert res.passed is False
     assert res.failed_rows == 1
     assert "invalid-email" in res.sample_failures
+
+
+def test_email_regex_rfc_validation() -> None:
+    """Test standard RFC email regex validation with valid, malformed, and null values."""
+    email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+
+    # Valid emails
+    df_valid = pd.DataFrame({
+        "email": [
+            "user@example.com",
+            "first.last+tag@sub.domain.co",
+            "developer_123@company-name.io",
+        ]
+    })
+    res_valid = RegexCheckRule("RX_VAL", "email", email_pattern).evaluate(DataSet("ds_valid", data=df_valid))
+    assert res_valid.passed is True
+    assert res_valid.failed_rows == 0
+
+    # Malformed emails
+    df_invalid = pd.DataFrame({
+        "email": [
+            "plainaddress",
+            "missingatsign.com",
+            "user@domain@domain.com",
+            "user@.com",
+            "hannah@not-an-email",
+        ]
+    })
+    res_invalid = RegexCheckRule("RX_INVAL", "email", email_pattern).evaluate(DataSet("ds_invalid", data=df_invalid))
+    assert res_invalid.passed is False
+    assert res_invalid.failed_rows == 5
+    assert len(res_invalid.sample_failures) == 5
+
+    # Null values: Nulls are ignored by regex rule (to be caught by null_check rule)
+    df_nulls = pd.DataFrame({"email": ["valid@test.com", None, "another.valid@test.com", None]})
+    res_nulls = RegexCheckRule("RX_NULL", "email", email_pattern).evaluate(DataSet("ds_nulls", data=df_nulls))
+    assert res_nulls.passed is True
+    assert res_nulls.failed_rows == 0
+
+
+def test_regex_config_validation() -> None:
+    """Verify that invalid regex patterns raise Pydantic ValidationError."""
+    with pytest.raises(ValidationError):
+        RegexCheckConfig(pattern="[unclosed-class")
 
 
 def test_foreign_key_rule() -> None:

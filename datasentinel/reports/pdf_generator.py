@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import html
 from pathlib import Path
 
 from reportlab.lib import colors
@@ -90,11 +91,11 @@ class PDFReportGenerator:
             elements = []
 
             # 1. Header Banner
-            elements.append(Paragraph("🛡️ DataSentinel — Pipeline Quality Report", title_style))
+            elements.append(Paragraph("DataSentinel — Pipeline Quality Report", title_style))
             elements.append(
                 Paragraph(
-                    f"Pipeline: <b>{result.pipeline_name}</b> | Target Source: {source_name} | "
-                    f"Run ID: {result.run_id} | Date: {result.timestamp}",
+                    f"Pipeline: <b>{html.escape(result.pipeline_name)}</b> | Target Source: {html.escape(source_name)} | "
+                    f"Run ID: {html.escape(result.run_id)} | Date: {html.escape(result.timestamp)}",
                     subtitle_style,
                 )
             )
@@ -159,14 +160,15 @@ class PDFReportGenerator:
             for r in result.rule_results:
                 status_color = "#16a34a" if r.passed else ("#d97706" if r.status.value == "warning" else "#dc2626")
                 status_text = f"<font color='{status_color}'><b>{r.status.value.upper()}</b></font>"
+                clean_msg = html.escape(r.message)
                 rule_table_data.append([
                     Paragraph(status_text, body_style),
-                    Paragraph(f"<b>{r.rule_id}</b>", body_style),
-                    Paragraph(r.rule_type, body_style),
-                    Paragraph(r.column, body_style),
+                    Paragraph(f"<b>{html.escape(r.rule_id)}</b>", body_style),
+                    Paragraph(html.escape(r.rule_type), body_style),
+                    Paragraph(html.escape(r.column), body_style),
                     Paragraph(f"{r.failed_rows}/{r.total_rows}", body_style),
                     Paragraph(f"{r.failure_rate * 100:.1f}%", body_style),
-                    Paragraph(r.message[:80] + ("..." if len(r.message) > 80 else ""), body_style),
+                    Paragraph(clean_msg[:120] + ("..." if len(clean_msg) > 120 else ""), body_style),
                 ])
 
             rule_table = Table(rule_table_data, colWidths=[50, 75, 75, 70, 60, 50, 160])
@@ -200,10 +202,10 @@ class PDFReportGenerator:
 
                 for a in result.anomalies:
                     metrics_str = f"&mu;={a.mean}, &sigma;={a.std}" if a.method == "zscore" else f"Q1={a.q1}, Q3={a.q3}"
-                    samples_str = ", ".join(f"{p.value} (conf={p.score})" for p in a.sample_anomalies[:2]) if a.sample_anomalies else "None"
+                    samples_str = html.escape(", ".join(f"{p.value} (conf={p.score})" for p in a.sample_anomalies[:2])) if a.sample_anomalies else "None"
                     anomaly_table_data.append([
-                        Paragraph(f"<b>{a.column}</b>", body_style),
-                        Paragraph(a.method.upper(), body_style),
+                        Paragraph(f"<b>{html.escape(a.column)}</b>", body_style),
+                        Paragraph(html.escape(a.method.upper()), body_style),
                         Paragraph(str(a.total_anomalies), body_style),
                         Paragraph(f"{a.anomaly_rate * 100:.2f}%", body_style),
                         Paragraph(metrics_str, body_style),
@@ -239,11 +241,11 @@ class PDFReportGenerator:
                 ]
                 for d in result.drift_report.diffs:
                     drift_table_data.append([
-                        Paragraph(d.drift_type.upper(), body_style),
-                        Paragraph(f"<b>{d.column_name}</b>", body_style),
-                        Paragraph(d.baseline_value or "-", body_style),
-                        Paragraph(d.current_value or "-", body_style),
-                        Paragraph(d.message, body_style),
+                        Paragraph(html.escape(d.drift_type.upper()), body_style),
+                        Paragraph(f"<b>{html.escape(d.column_name)}</b>", body_style),
+                        Paragraph(html.escape(str(d.baseline_value or "-")), body_style),
+                        Paragraph(html.escape(str(d.current_value or "-")), body_style),
+                        Paragraph(html.escape(d.message), body_style),
                     ])
 
                 drift_table = Table(drift_table_data, colWidths=[70, 80, 85, 85, 220])

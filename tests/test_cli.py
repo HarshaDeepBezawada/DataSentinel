@@ -95,3 +95,9 @@ def test_cli_schedule_help() -> None:
     clean_stdout = re.sub(r"\x1b\[[0-9;]*[mK]", "", result.stdout)
     assert "--cron" in clean_stdout
     assert "APScheduler" in clean_stdout
+
+
+def test_cli_exit_code_on_missing_config() -> None:
+    """Verify that nonexistent config returns exit code 2."""
+    result = runner.invoke(app, ["validate", "config/nonexistent_config_file.yaml"])
+    assert result.exit_code == 2

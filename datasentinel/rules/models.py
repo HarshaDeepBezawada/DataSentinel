@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -59,6 +60,15 @@ class RegexCheckConfig(BaseModel):
 
     pattern: str = Field(..., description="Regex pattern string")
     full_match: bool = True
+
+    @field_validator("pattern")
+    @classmethod
+    def validate_pattern(cls, v: str) -> str:
+        try:
+            re.compile(v)
+        except re.error as e:
+            raise ValueError(f"Invalid regular expression pattern '{v}': {e}") from e
+        return v
 
 
 class ForeignKeyConfig(BaseModel):

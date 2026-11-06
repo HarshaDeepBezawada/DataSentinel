@@ -9,6 +9,7 @@ from pathlib import Path
 
 import typer
 from rich.console import Console
+from rich.markup import escape
 from rich.panel import Panel
 from rich.table import Table
 
@@ -197,13 +198,13 @@ def validate_command(
             console.print(summary_table)
 
             # Rules Detail Table
-            rule_table = Table(title="Rule Evaluation Breakdown", border_style="dim")
-            rule_table.add_column("Rule ID", style="bold")
-            rule_table.add_column("Type")
-            rule_table.add_column("Column")
-            rule_table.add_column("Status")
-            rule_table.add_column("Violations")
-            rule_table.add_column("Details")
+            rule_table = Table(title="Rule Evaluation Breakdown", border_style="dim", expand=True)
+            rule_table.add_column("Rule ID", style="bold", no_wrap=True)
+            rule_table.add_column("Type", no_wrap=True)
+            rule_table.add_column("Column", no_wrap=True)
+            rule_table.add_column("Status", justify="center", no_wrap=True)
+            rule_table.add_column("Violations", justify="right", no_wrap=True)
+            rule_table.add_column("Details", overflow="fold")
 
             for r in result.rule_results:
                 status_badge = (
@@ -212,12 +213,12 @@ def validate_command(
                     else ("[yellow]WARN[/yellow]" if r.status == ValidationStatus.WARNING else "[red]FAIL[/red]")
                 )
                 rule_table.add_row(
-                    r.rule_id,
-                    r.rule_type,
-                    r.column,
+                    escape(r.rule_id),
+                    escape(r.rule_type),
+                    escape(r.column),
                     status_badge,
-                    f"{r.failed_rows}/{r.total_rows} ({r.failure_rate * 100:.1f}%)",
-                    r.message,
+                    escape(f"{r.failed_rows}/{r.total_rows} ({r.failure_rate * 100:.1f}%)"),
+                    escape(r.message),
                 )
             console.print(rule_table)
 
@@ -372,10 +373,10 @@ def compare_schemas_command(
             badge_color = "red" if d.drift_type == "removed" else ("cyan" if d.drift_type == "added" else "yellow")
             drift_table.add_row(
                 f"[{badge_color}]{d.drift_type.upper()}[/{badge_color}]",
-                d.column_name,
-                d.baseline_value or "-",
-                d.current_value or "-",
-                d.message,
+                escape(d.column_name),
+                escape(str(d.baseline_value or "-")),
+                escape(str(d.current_value or "-")),
+                escape(d.message),
             )
         console.print(drift_table)
 
@@ -450,24 +451,24 @@ def list_rules_command(
     try:
         pipeline = RuleLoader.load_pipeline(config)
 
-        table = Table(title=f"Configured Quality Rules: {pipeline.name}", border_style="blue")
-        table.add_column("Rule ID", style="bold cyan")
-        table.add_column("Type", style="magenta")
-        table.add_column("Column", style="yellow")
-        table.add_column("Severity")
-        table.add_column("Parameters", style="dim")
-        table.add_column("Description")
+        table = Table(title=f"Configured Quality Rules: {pipeline.name}", border_style="blue", expand=True)
+        table.add_column("Rule ID", style="bold cyan", no_wrap=True)
+        table.add_column("Type", style="magenta", no_wrap=True)
+        table.add_column("Column", style="yellow", no_wrap=True)
+        table.add_column("Severity", justify="center", no_wrap=True)
+        table.add_column("Parameters", style="dim", overflow="fold")
+        table.add_column("Description", overflow="fold")
 
         for r in pipeline.rules:
             sev_color = "red" if r.severity == "error" else "yellow"
             params_str = ", ".join(f"{k}={v}" for k, v in r.params.items()) or "-"
             table.add_row(
-                r.id,
-                r.type,
-                r.column,
+                escape(r.id),
+                escape(r.type),
+                escape(r.column),
                 f"[{sev_color}]{r.severity.upper()}[/{sev_color}]",
-                params_str,
-                r.description or "-",
+                escape(params_str),
+                escape(r.description or "-"),
             )
 
         console.print(table)

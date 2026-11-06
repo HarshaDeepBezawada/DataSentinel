@@ -60,7 +60,7 @@ class RegexCheckRule(BaseRule):
             series = chunk[self.column].dropna().astype(str)
 
             if self.full_match:
-                matches = series.str.match(self.pattern, na=False)
+                matches = series.str.fullmatch(self.pattern, na=False)
             else:
                 matches = series.str.contains(self.pattern, na=False)
 

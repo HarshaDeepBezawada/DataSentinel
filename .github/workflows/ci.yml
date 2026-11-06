@@ -33,7 +33,11 @@ jobs:
 
       - name: Run mypy strict type checker
         run: |
-          mypy datasentinel
+          mypy datasentinel tests
+
+      - name: Run Ruff linter
+        run: |
+          ruff check datasentinel tests
 
       - name: Run pytest with coverage
         run: |
