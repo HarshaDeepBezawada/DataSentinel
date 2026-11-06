@@ -61,3 +61,6 @@ htmlcov/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Local recording guides (personal notes)
+RECORDING_*
