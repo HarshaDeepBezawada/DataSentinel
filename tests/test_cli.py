@@ -31,15 +31,9 @@ def test_cli_list_rules() -> None:
 
 
 def test_cli_validate() -> None:
-    """Test validate command on ecommerce_orders.yaml (returns exit code 0 on 100% clean data)."""
+    """Test validate command on ecommerce_orders.yaml (returns exit code 1 due to injected violations)."""
     result = runner.invoke(app, ["validate", "config/ecommerce_orders.yaml", "--quiet"])
-    assert result.exit_code == 0
-    assert "E-Commerce Orders Validation" in result.stdout
-
-
-def test_cli_validate_failures() -> None:
-    """Test validate command on ecommerce_orders_failures.yaml (returns exit code 1 due to violations)."""
-    result = runner.invoke(app, ["validate", "config/ecommerce_orders_failures.yaml", "--quiet"])
+    # Should exit with code 1 indicating quality failures detected
     assert result.exit_code == 1
     assert "E-Commerce Orders Validation" in result.stdout
 

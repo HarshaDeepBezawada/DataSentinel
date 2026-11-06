@@ -164,12 +164,14 @@ def main() -> int:
     from datasentinel.cli import _run_pipeline
     from datasentinel.reports.html_generator import HTMLReportGenerator
     from datasentinel.reports.pdf_generator import PDFReportGenerator
+    from datasentinel.storage.history import RunHistoryStore
 
     run_res = _run_pipeline(Path("config/ecommerce_orders.yaml"), show_progress=False)
     html_target = Path("reports/sample_report.html")
     pdf_target = Path("reports/sample_report.pdf")
 
-    HTMLReportGenerator().generate(run_res, html_target)
+    history_store = RunHistoryStore()
+    HTMLReportGenerator().generate(run_res, html_target, history_store=history_store)
     PDFReportGenerator().generate(run_res, pdf_target)
 
     # Also update docs/index.html for GitHub Pages live preview

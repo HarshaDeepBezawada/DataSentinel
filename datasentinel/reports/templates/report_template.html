@@ -291,7 +291,14 @@
       </div>
 
       <div class="chart-box">
-        <h3>Historical Trend (Pass Rate & Anomalies)</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <h3 style="margin-bottom: 0;">Historical Trend (Pass Rate & Anomalies)</h3>
+          {% if not history_labels %}
+            <span style="font-size: 0.75rem; color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 0.2rem 0.5rem; border-radius: 4px;">Initial Run (No Prior History)</span>
+          {% else %}
+            <span style="font-size: 0.75rem; color: var(--accent-blue); background: rgba(56,189,248,0.1); padding: 0.2rem 0.5rem; border-radius: 4px;">{{ history_labels|length }} Historical Run(s) Tracked</span>
+          {% endif %}
+        </div>
         <div class="chart-container">
           <canvas id="historyTrendChart"></canvas>
         </div>
