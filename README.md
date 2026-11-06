@@ -9,7 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![CLI: Typer & Rich](https://img.shields.io/badge/CLI-Typer%20%2B%20Rich-orange.svg)](https://typer.tiangolo.com/)
 
-> 📹 **5-Minute Project Demo Walkthrough**: [Watch the video demonstration on YouTube / Loom](https://youtu.be/YOUR_DEMO_VIDEO_ID) (See [DEMO_SCRIPT.md](file:///c:/Users/harsh/Downloads/DataSentiel/DEMO_SCRIPT.md) for script details)
+> 📹 **5-Minute Project Demo Walkthrough**: [Watch the video demonstration on YouTube / Loom](https://youtu.be/YOUR_DEMO_VIDEO_ID) (See [DEMO_SCRIPT.md](DEMO_SCRIPT.md) for exact recording script)
 
 ### ⚡ Instant "One-Click" Quickstart (Evaluator Mode)
 
