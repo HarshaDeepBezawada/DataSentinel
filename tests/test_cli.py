@@ -1,5 +1,6 @@
 """Tests for Typer CLI commands."""
 
+import re
 from pathlib import Path
 
 from typer.testing import CliRunner
@@ -91,5 +92,6 @@ def test_cli_schedule_help() -> None:
     """Test CLI schedule command help text and options."""
     result = runner.invoke(app, ["schedule", "--help"])
     assert result.exit_code == 0
-    assert "--cron" in result.stdout
-    assert "APScheduler" in result.stdout
+    clean_stdout = re.sub(r"\x1b\[[0-9;]*[mK]", "", result.stdout)
+    assert "--cron" in clean_stdout
+    assert "APScheduler" in clean_stdout
