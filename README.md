@@ -402,7 +402,7 @@ datasentinel_quality_gate = BashOperator(
 DataSentinel includes a comprehensive test suite with property-based testing and strict static type checking:
 
 ```bash
-# 1. Run all 49 unit, integration, and property tests with coverage report
+# 1. Run all 50 unit, integration, and property tests with coverage report
 pytest
 
 # 2. Run mypy in strict mode (enforces zero type errors)
@@ -425,7 +425,7 @@ mypy datasentinel
 - [x] **3 Sample datasets with injected violations & anomalies** (`ecommerce_orders.csv`, `hr_data.csv`, `sales_pipeline.csv`)
 - [x] **Sample Executive HTML Report** (`reports/sample_report.html`)
 - [x] **Sample Executive PDF Report** (`reports/sample_report.pdf`)
-- [x] **pytest suite with >84% coverage** (49 passed tests)
+- [x] **pytest suite with >84% coverage** (50 passed tests)
 - [x] **mypy strict mode output: 0 errors**
 - [x] **Complete Architecture Diagram and CLI Reference Documentation**
 

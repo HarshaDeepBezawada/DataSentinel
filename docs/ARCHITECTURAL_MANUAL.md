@@ -327,10 +327,10 @@ DataSentinel/
 │   └── datasentinel-0.1.0-py3-none-any.whl # Pre-built pip wheel
 ├── reports/                      # Sample generated output evidence
 │   ├── mypy_strict_report.txt    # Evidence: 0 errors across 45 files in mypy strict
-│   ├── pytest_coverage.txt       # Evidence: 49 tests passed, 84% coverage
+│   ├── pytest_coverage.txt       # Evidence: 50 tests passed, 84% coverage
 │   ├── sample_report.html        # Evidence: Rendered interactive HTML executive report
 │   └── sample_report.pdf         # Evidence: Rendered ReportLab executive PDF report
-├── tests/                        # Comprehensive test suite (49 tests)
+├── tests/                        # Comprehensive test suite (50 tests)
 │   ├── conftest.py               # Pytest fixtures and mocks
 │   ├── test_alerts.py            # Unit tests for SMTP and Slack alerts
 │   ├── test_anomaly.py           # Unit tests for Z-Score and IQR algorithms
@@ -491,7 +491,7 @@ Run the complete automated test suite with coverage tracing:
 pytest --cov=datasentinel --cov-report=term-missing
 ```
 * **What you will see:**
-  - **49 passed** in under 25 seconds.
+  - **50 passed** in under 25 seconds.
   - **84% line coverage** across the entire package (comfortably exceeding the 75% requirement).
   - **Zero warnings** (no unclosed database connections or deprecation warnings).
 

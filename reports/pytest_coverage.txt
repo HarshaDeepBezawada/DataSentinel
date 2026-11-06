@@ -4,19 +4,19 @@ rootdir: /workspace/DataSentinel
 configfile: pyproject.toml
 testpaths: tests
 plugins: anyio-4.15.1, hypothesis-6.170.13, cov-7.1.0
-collected 49 items
+collected 50 items
 
 tests/test_alerts.py ....                                                [  8%]
 tests/test_anomaly.py ....                                               [ 16%]
-tests/test_cli.py ......                                                 [ 28%]
-tests/test_connectors.py ...........                                     [ 51%]
-tests/test_coverage_boost.py ....                                        [ 59%]
-tests/test_hypothesis_properties.py ....                                 [ 67%]
-tests/test_large_dataset_500k.py .                                       [ 69%]
-tests/test_reports.py ..                                                 [ 73%]
-tests/test_rules.py .......                                              [ 87%]
-tests/test_scheduler.py ..                                               [ 91%]
-tests/test_schema_drift.py ...                                           [ 97%]
+tests/test_cli.py .......                                                [ 30%]
+tests/test_connectors.py ...........                                     [ 52%]
+tests/test_coverage_boost.py ....                                        [ 60%]
+tests/test_hypothesis_properties.py ....                                 [ 68%]
+tests/test_large_dataset_500k.py .                                       [ 70%]
+tests/test_reports.py ..                                                 [ 74%]
+tests/test_rules.py .......                                              [ 88%]
+tests/test_scheduler.py ..                                               [ 92%]
+tests/test_schema_drift.py ...                                           [ 98%]
 tests/test_storage.py .                                                  [100%]
 
 =============================== tests coverage ================================
@@ -72,4 +72,4 @@ datasentinel/storage/history.py                 44      6      0      0    86%  
 ----------------------------------------------------------------------------------------
 TOTAL                                         1866    227    426    100    84%
 Coverage HTML written to dir htmlcov
-============================= 49 passed in 3.73s ==============================
+============================= 50 passed in 3.49s ==============================

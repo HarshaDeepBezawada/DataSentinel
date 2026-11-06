@@ -85,3 +85,11 @@ def test_cli_validate_json_flags(tmp_path: Path) -> None:
     ])
     assert res_stdout.exit_code == 0
     assert '"pipeline_name": "Inventory Products JSON Pipeline"' in res_stdout.stdout
+
+
+def test_cli_schedule_help() -> None:
+    """Test CLI schedule command help text and options."""
+    result = runner.invoke(app, ["schedule", "--help"])
+    assert result.exit_code == 0
+    assert "--cron" in result.stdout
+    assert "APScheduler" in result.stdout
