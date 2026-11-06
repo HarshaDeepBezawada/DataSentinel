@@ -232,7 +232,7 @@ def validate_command(
 
     except DataSentinelError as e:
         console.print(f"[bold red]DataSentinel Error:[/bold red] {e}")
-        raise typer.Exit(code=2)
+        raise typer.Exit(code=2) from e
 
 
 @app.command("report")
@@ -294,7 +294,7 @@ def report_command(
 
     except DataSentinelError as e:
         console.print(f"[bold red]Error generating report:[/bold red] {e}")
-        raise typer.Exit(code=2)
+        raise typer.Exit(code=2) from e
 
 
 @app.command("compare-schemas")
@@ -381,7 +381,7 @@ def compare_schemas_command(
 
     except DataSentinelError as e:
         console.print(f"[bold red]Schema Drift Error:[/bold red] {e}")
-        raise typer.Exit(code=2)
+        raise typer.Exit(code=2) from e
 
 
 @app.command("schedule")
@@ -429,7 +429,7 @@ def schedule_command(
         console.print("\n[yellow]Scheduler stopped by user.[/yellow]")
     except DataSentinelError as e:
         console.print(f"[bold red]Scheduler Error:[/bold red] {e}")
-        raise typer.Exit(code=2)
+        raise typer.Exit(code=2) from e
 
 
 @app.command("list-rules")
@@ -475,7 +475,7 @@ def list_rules_command(
 
     except DataSentinelError as e:
         console.print(f"[bold red]Error reading rules:[/bold red] {e}")
-        raise typer.Exit(code=2)
+        raise typer.Exit(code=2) from e
 
 
 if __name__ == "__main__":

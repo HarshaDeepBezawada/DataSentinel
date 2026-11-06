@@ -2,20 +2,20 @@
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel, Field
 
 
-class Severity(str, Enum):
+class Severity(StrEnum):
     """Severity level of a rule violation."""
     ERROR = "error"
     WARNING = "warning"
     INFO = "info"
 
 
-class ValidationStatus(str, Enum):
+class ValidationStatus(StrEnum):
     """Validation execution status."""
     PASSED = "passed"
     FAILED = "failed"
@@ -23,7 +23,7 @@ class ValidationStatus(str, Enum):
     ERROR = "error"
 
 
-class DriftType(str, Enum):
+class DriftType(StrEnum):
     """Types of schema drift detected."""
     ADDED = "added"
     REMOVED = "removed"

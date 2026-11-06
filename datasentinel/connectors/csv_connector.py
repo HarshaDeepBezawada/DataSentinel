@@ -38,7 +38,7 @@ class CSVConnector(BaseConnector):
                 details=f"Current working directory: {os.getcwd()}",
             )
         try:
-            with open(path, "r", encoding=self.encoding) as f:
+            with open(path, encoding=self.encoding) as f:
                 f.read(10)
             self._connected = True
         except Exception as e:
@@ -82,7 +82,6 @@ class CSVConnector(BaseConnector):
                 header=self.has_header,
                 chunksize=chunk_size,
             )
-            for chunk in reader:
-                yield chunk
+            yield from reader
         except Exception as e:
             raise ConnectorError(f"Error streaming chunks from CSV '{self.file_path}': {e}") from e

@@ -33,30 +33,29 @@ class RunHistoryStore:
     def _init_db(self) -> None:
         """Create history table if it doesn't already exist."""
         try:
-            with self._connection() as conn:
-                with conn:
-                    conn.execute(
-                        """
-                        CREATE TABLE IF NOT EXISTS run_history (
-                            run_id TEXT PRIMARY KEY,
-                            pipeline_name TEXT NOT NULL,
-                            timestamp TEXT NOT NULL,
-                            duration_ms REAL NOT NULL,
-                            total_rows INTEGER NOT NULL,
-                            total_columns INTEGER NOT NULL,
-                            rules_passed INTEGER NOT NULL,
-                            rules_failed INTEGER NOT NULL,
-                            rules_warning INTEGER NOT NULL,
-                            anomaly_count INTEGER NOT NULL,
-                            drift_count INTEGER NOT NULL,
-                            overall_status TEXT NOT NULL,
-                            details_json TEXT NOT NULL
-                        )
-                        """
+            with self._connection() as conn, conn:
+                conn.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS run_history (
+                        run_id TEXT PRIMARY KEY,
+                        pipeline_name TEXT NOT NULL,
+                        timestamp TEXT NOT NULL,
+                        duration_ms REAL NOT NULL,
+                        total_rows INTEGER NOT NULL,
+                        total_columns INTEGER NOT NULL,
+                        rules_passed INTEGER NOT NULL,
+                        rules_failed INTEGER NOT NULL,
+                        rules_warning INTEGER NOT NULL,
+                        anomaly_count INTEGER NOT NULL,
+                        drift_count INTEGER NOT NULL,
+                        overall_status TEXT NOT NULL,
+                        details_json TEXT NOT NULL
                     )
-                    conn.execute(
-                        "CREATE INDEX IF NOT EXISTS idx_pipeline_time ON run_history(pipeline_name, timestamp DESC)"
-                    )
+                    """
+                )
+                conn.execute(
+                    "CREATE INDEX IF NOT EXISTS idx_pipeline_time ON run_history(pipeline_name, timestamp DESC)"
+                )
         except Exception as e:
             raise StorageError(f"Failed to initialize SQLite history store at '{self.db_path}': {e}") from e
 

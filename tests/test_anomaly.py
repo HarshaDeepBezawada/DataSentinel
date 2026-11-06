@@ -1,5 +1,7 @@
 """Tests for statistical anomaly detection (Z-Score and IQR)."""
 
+from collections.abc import Iterator
+
 import pandas as pd
 
 from datasentinel.anomaly.detector import StatisticalAnomalyDetector
@@ -64,7 +66,7 @@ def test_statistical_anomaly_detector_orchestrator(dirty_numeric_df: pd.DataFram
 
 def test_chunked_streaming_anomaly_detection() -> None:
     """Test anomaly detection operates on chunked streams without loading full data at once."""
-    def chunk_supplier(chunk_size: int):
+    def chunk_supplier(chunk_size: int) -> Iterator[pd.DataFrame]:
         for i in range(5):
             if i == 4:
                 yield pd.DataFrame({"val": [10.0] * 100 + [99999.0]})

@@ -26,7 +26,7 @@ class RuleLoader:
                 details=f"Current working directory: {os.getcwd()}",
             )
         try:
-            with open(path, "r", encoding="utf-8") as f:
+            with open(path, encoding="utf-8") as f:
                 data = yaml.safe_load(f)
                 if not isinstance(data, dict):
                     raise ConfigurationError(f"YAML content in '{path}' must be a key-value dictionary.")

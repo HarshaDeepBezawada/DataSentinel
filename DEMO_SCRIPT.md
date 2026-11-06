@@ -14,7 +14,7 @@ This script provides an exact, second-by-second walkthrough for recording the 5-
 | **1:45 - 2:30** | 4. CLI & Pipeline Validation | Terminal executing `datasentinel validate` | Rich styled output, real violations caught (null, unique, range, regex, FK) |
 | **2:30 - 3:15** | 5. Schema Drift & Anomaly Detection | Terminal executing `compare-schemas` & 500k benchmark | Structural drift detection, streaming Z-score & IQR for 500,000 rows |
 | **3:15 - 4:05** | 6. Executive HTML & PDF Reports | Browser showing HTML + PDF viewer | Interactive Chart.js charts, historical trends, ReportLab PDF export |
-| **4:05 - 4:40** | 7. Test Suite & Type Safety | Terminal running `pytest` & `mypy` | 47 passed tests, >83% coverage, Hypothesis property tests, zero mypy errors |
+| **4:05 - 4:40** | 7. Test Suite & Type Safety | Terminal running `pytest` & `mypy` | 50 passed tests, >84% coverage, Hypothesis property tests, zero mypy errors |
 | **4:40 - 5:00** | 8. Conclusion & Deliverables | GitHub repo overview / Summary | Package installability, wheel distribution, wrap-up |
 
 ---
@@ -94,7 +94,7 @@ This script provides an exact, second-by-second walkthrough for recording the 5-
   pytest
   ```
 - **Voiceover:**
-  > *"Quality assurance is paramount. The automated test suite executes 47 comprehensive tests in just 7 seconds, achieving over 83% line coverage — well exceeding the 75% internship requirement. It includes property-based testing with Hypothesis to mathematically verify anomaly calculation invariants."*
+  > *"Quality assurance is paramount. The automated test suite executes 50 comprehensive tests in under 4 seconds, achieving over 84% line coverage — well exceeding the 75% internship requirement. It includes property-based testing with Hypothesis to mathematically verify anomaly calculation invariants."*
 
 - **Terminal Action 2:** Run `mypy`:
   ```bash

@@ -161,7 +161,6 @@ class SQLConnector(BaseConnector):
         sql = self._get_sql_statement()
         try:
             with self._engine.connect() as conn:
-                for chunk in pd.read_sql(text(sql), conn, chunksize=chunk_size):
-                    yield chunk
+                yield from pd.read_sql(text(sql), conn, chunksize=chunk_size)
         except Exception as e:
             raise ConnectorError(f"Failed streaming SQL chunks on '{self.name}': {e}") from e

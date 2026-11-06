@@ -47,7 +47,7 @@ class SchemaRegistry:
         if not target_path.is_file():
             return None
         try:
-            with open(target_path, "r", encoding="utf-8") as f:
+            with open(target_path, encoding="utf-8") as f:
                 content = f.read()
             return SchemaFingerprint.model_validate_json(content)
         except Exception as e:

@@ -89,3 +89,15 @@ exclude_lines = [
     "raise NotImplementedError",
     "if TYPE_CHECKING:",
 ]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = [
+    "E501",    # Line length check handled by auto-formatter
+    "B008",    # Typer uses function calls (Argument/Option) as default values
+    "SIM108",  # Ternary operators can reduce readability in complex expressions
+]

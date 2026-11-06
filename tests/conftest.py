@@ -1,5 +1,6 @@
 """Pytest fixtures for DataSentinel test suite."""
 
+from collections.abc import Iterator
 import tempfile
 from pathlib import Path
 
@@ -44,7 +45,7 @@ def dirty_numeric_df() -> pd.DataFrame:
 
 
 @pytest.fixture
-def temp_workspace() -> Path:
+def temp_workspace() -> Iterator[Path]:
     """Fixture providing an isolated temporary directory."""
     with tempfile.TemporaryDirectory() as tmpdir:
         yield Path(tmpdir)

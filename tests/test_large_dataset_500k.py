@@ -1,5 +1,6 @@
 """Verification and benchmark test for 500,000-row dataset streaming anomaly detection."""
 
+from collections.abc import Iterator
 import os
 
 import numpy as np
@@ -30,7 +31,7 @@ def test_500k_rows_streaming_anomaly_detection() -> None:
         375_000: -888_888.0,
     }
 
-    def chunk_generator(size: int):
+    def chunk_generator(size: int) -> Iterator[pd.DataFrame]:
         np.random.seed(42)
         row_cursor = 0
         for _ in range(num_chunks):

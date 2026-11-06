@@ -68,7 +68,7 @@ class JSONConnector(BaseConnector):
             if self.lines:
                 df = pd.read_json(self.file_path, lines=True)
             else:
-                with open(self.file_path, "r", encoding="utf-8") as f:
+                with open(self.file_path, encoding="utf-8") as f:
                     data = json.load(f)
 
                 if self.nested_path:

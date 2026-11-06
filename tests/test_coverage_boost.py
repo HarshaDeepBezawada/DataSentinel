@@ -1,5 +1,6 @@
 """Additional targeted tests to maximize test coverage."""
 
+from collections.abc import Iterator
 import sqlite3
 from pathlib import Path
 
@@ -18,7 +19,7 @@ def test_dataset_null_counts_and_chunked_fingerprint() -> None:
     df1 = pd.DataFrame({"col_a": [1, None], "col_b": ["x", "y"]})
     df2 = pd.DataFrame({"col_a": [3, 4], "col_b": [None, "z"]})
 
-    def chunk_supplier(chunk_size: int):
+    def chunk_supplier(chunk_size: int) -> Iterator[pd.DataFrame]:
         yield df1
         yield df2
 
@@ -36,7 +37,7 @@ def test_dataset_null_counts_and_chunked_fingerprint() -> None:
 
 def test_dataset_to_dataframe_from_chunks() -> None:
     """Test converting chunked DataSet to single DataFrame."""
-    def chunk_supplier(chunk_size: int):
+    def chunk_supplier(chunk_size: int) -> Iterator[pd.DataFrame]:
         yield pd.DataFrame({"a": [1, 2]})
         yield pd.DataFrame({"a": [3, 4]})
 

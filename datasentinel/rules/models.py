@@ -76,10 +76,10 @@ class AnomalyConfig(BaseModel):
 
     enabled: bool = True
     columns: list[str] = Field(default_factory=list)
-    method: str = Field("both", pattern="^(zscore|iqr|both)$")
-    zscore_threshold: float = Field(3.0, gt=0.0)
-    iqr_multiplier: float = Field(1.5, gt=0.0)
-    max_anomalies_to_report: int = Field(50, gt=0)
+    method: str = Field(default="both", pattern="^(zscore|iqr|both)$")
+    zscore_threshold: float = Field(default=3.0, gt=0.0)
+    iqr_multiplier: float = Field(default=1.5, gt=0.0)
+    max_anomalies_to_report: int = Field(default=50, gt=0)
 
 
 class EmailAlertConfig(BaseModel):

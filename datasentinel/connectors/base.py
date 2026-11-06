@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
-from typing import Any
+from types import TracebackType
+from typing import Any, Self
 
 import pandas as pd
 
@@ -39,7 +40,7 @@ class BaseConnector(ABC):
     def stream_chunks(self, chunk_size: int = 50000) -> Iterator[pd.DataFrame]:
         """Stream data in chunks for memory-efficient processing of large sources."""
 
-    def __enter__(self) -> BaseConnector:
+    def __enter__(self) -> Self:
         self.connect()
         return self
 
@@ -47,6 +48,6 @@ class BaseConnector(ABC):
         self,
         exc_type: type[BaseException] | None,
         exc_val: BaseException | None,
-        exc_tb: Any | None,
+        exc_tb: TracebackType | None,
     ) -> None:
         self.disconnect()
