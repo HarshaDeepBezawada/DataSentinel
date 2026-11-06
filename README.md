@@ -120,23 +120,24 @@ flowchart TD
 ## 🚀 Quickstart & Installation
 
 ### 1. Installation
-Install the package in development/editable mode:
 
+**Recommended (Offline / Immediate):** Install directly from the included standalone distribution wheel:
+```bash
+pip install dist/datasentinel-0.1.0-py3-none-any.whl
+```
+
+**Development Mode:**
 ```bash
 git clone https://github.com/HarshaDeepBezawada/DataSentinel.git
 cd DataSentinel
 pip install -e ".[dev]"
 ```
 
-Or install the standalone pre-built wheel from `dist/`:
-```bash
-pip install dist/datasentinel-0.1.0-py3-none-any.whl
-```
-
-Or install via TestPyPI:
+**Optional TestPyPI Distribution:**
 ```bash
 pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ datasentinel
 ```
+*(If TestPyPI index propagation is delayed or offline, the included standalone wheel in `dist/` installs instantly).*
 
 Verify installation:
 ```bash

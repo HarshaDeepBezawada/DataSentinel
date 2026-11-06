@@ -231,7 +231,7 @@ flowchart TD
 - **Problem Solved:** The platform must be easy to run from any terminal, look modern, provide useful help documentation, and install effortlessly via `pip`.
 - **How It Works:**
   - Built with **Typer** and **Rich**. Includes styled ANSI color tables, real-time spinners, and multi-step progress bars.
-  - Packaged via modern standard `pyproject.toml` adhering to PEP 517/621 standards with standalone wheel generation.
+  - Packaged via modern standard `pyproject.toml` adhering to PEP 517/621 standards using the Hatchling build backend as specified in the project brief.
   - Compiles into a standalone distribution wheel: `dist/datasentinel-0.1.0-py3-none-any.whl`.
 
 ---

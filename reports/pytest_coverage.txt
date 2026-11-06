@@ -1,75 +1,75 @@
 ============================= test session starts =============================
-platform win32 -- Python 3.14.6, pytest-9.2.0, pluggy-1.7.0
-rootdir: C:\Users\harsh\Downloads\DataSentiel
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0
+rootdir: /workspace/DataSentinel
 configfile: pyproject.toml
 testpaths: tests
 plugins: anyio-4.15.1, hypothesis-6.170.13, cov-7.1.0
-collected 48 items
+collected 49 items
 
-tests\test_alerts.py ....                                                [  8%]
-tests\test_anomaly.py ....                                               [ 16%]
-tests\test_cli.py .....                                                  [ 27%]
-tests\test_connectors.py ...........                                     [ 50%]
-tests\test_coverage_boost.py ....                                        [ 58%]
-tests\test_hypothesis_properties.py ....                                 [ 66%]
-tests\test_large_dataset_500k.py .                                       [ 68%]
-tests\test_reports.py ..                                                 [ 72%]
-tests\test_rules.py .......                                              [ 87%]
-tests\test_scheduler.py ..                                               [ 91%]
-tests\test_schema_drift.py ...                                           [ 97%]
-tests\test_storage.py .                                                  [100%]
+tests/test_alerts.py ....                                                [  8%]
+tests/test_anomaly.py ....                                               [ 16%]
+tests/test_cli.py ......                                                 [ 28%]
+tests/test_connectors.py ...........                                     [ 51%]
+tests/test_coverage_boost.py ....                                        [ 59%]
+tests/test_hypothesis_properties.py ....                                 [ 67%]
+tests/test_large_dataset_500k.py .                                       [ 69%]
+tests/test_reports.py ..                                                 [ 73%]
+tests/test_rules.py .......                                              [ 87%]
+tests/test_scheduler.py ..                                               [ 91%]
+tests/test_schema_drift.py ...                                           [ 97%]
+tests/test_storage.py .                                                  [100%]
 
 =============================== tests coverage ================================
-_______________ coverage: platform win32, python 3.14.6-final-0 _______________
+_______________ coverage: platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0
 
 Name                                         Stmts   Miss Branch BrPart  Cover   Missing
 ----------------------------------------------------------------------------------------
-datasentinel\__init__.py                         2      0      0      0   100%
-datasentinel\alerts\__init__.py                  5      0      0      0   100%
-datasentinel\alerts\base.py                      7      1      0      0    86%   18
-datasentinel\alerts\email_notifier.py           50      6     12      5    82%   60, 69, 80, 96->98, 99, 102-103
-datasentinel\alerts\manager.py                  26      4     12      5    76%   20->exit, 21->30, 30->exit, 41, 45, 50-52
-datasentinel\alerts\slack_notifier.py           39     10      8      2    70%   60->69, 70->72, 75-88
-datasentinel\anomaly\__init__.py                 4      0      0      0   100%
-datasentinel\anomaly\detector.py                40      4     20      6    80%   36, 42-44, 63->65, 65->67, 70->72, 72->69
-datasentinel\anomaly\iqr.py                     80      5     32      4    92%   29, 33, 47, 81-82
-datasentinel\anomaly\zscore.py                  62      8     20      5    82%   28, 32, 38, 69-70, 100-102
-datasentinel\cli.py                            211     52     42     16    72%   56->69, 63, 66, 74->78, 88-89, 116-117, 145, 170->178, 208->exit, 212-213, 252, 254->264, 264->exit, 273-275, 303-312, 321-322, 325-329, 347-348, 361-363, 387-411, 455-457
-datasentinel\connectors\__init__.py              8      0      0      0   100%
-datasentinel\connectors\api_connector.py       114     33     38     10    65%   27, 52, 55-59, 64, 68, 71-81, 86->96, 92, 98-100, 116, 121->159, 126-128, 139, 152-157, 168-170
-datasentinel\connectors\base.py                 30      8      0      0    73%   23, 28, 33, 38, 43, 46-47, 55
-datasentinel\connectors\csv_connector.py        52      8      6      1    84%   28, 42-43, 46, 70-71, 85-86
-datasentinel\connectors\excel_connector.py      42     10      6      2    71%   27, 32, 39, 45-46, 58-59, 63-65
-datasentinel\connectors\json_connector.py       64     13     20      5    74%   29, 34, 41, 47-48, 67, 77-81, 92, 95-97
-datasentinel\connectors\registry.py             29      1      2      0    97%   26
-datasentinel\connectors\sql_connector.py       113     26     34      8    73%   27, 32-36, 61-72, 75, 80->89, 82->89, 95, 123->126, 132-133, 153-154, 164-165
-datasentinel\core\__init__.py                    4      0      0      0   100%
-datasentinel\core\dataset.py                    90      5     46      9    90%   29, 46->48, 55, 66, 70, 78->exit, 84, 88->87, 128->120
-datasentinel\core\exceptions.py                 32      1      2      1    94%   16
-datasentinel\core\types.py                      88      0      0      0   100%
-datasentinel\reports\__init__.py                 3      0      0      0   100%
-datasentinel\reports\html_generator.py          37      2      6      1    93%   18->20, 69-70
-datasentinel\reports\pdf_generator.py           70      2     10      1    96%   188->229, 269-270
-datasentinel\rules\__init__.py                  11      0      0      0   100%
-datasentinel\rules\base.py                      30      1      6      0    97%   37
-datasentinel\rules\executor.py                  32      0      8      0   100%
-datasentinel\rules\foreign_key_check.py         55      8     16      5    79%   64-71, 87->80, 91, 102
-datasentinel\rules\loader.py                    37      4      6      2    86%   23, 31, 54-55
-datasentinel\rules\models.py                    82      1      2      1    98%   51
-datasentinel\rules\null_check.py                34      1      6      1    95%   58
-datasentinel\rules\range_check.py               55      1     22      7    90%   65->67, 67->76, 71->73, 73->76, 82, 87->89, 89->91
-datasentinel\rules\regex_check.py               43      3     10      4    87%   66, 70->59, 74, 79
-datasentinel\rules\registry.py                  27      3      2      1    86%   28-29, 42
-datasentinel\rules\unique_check.py              37      2      6      2    91%   52, 57
-datasentinel\scheduler\__init__.py               2      0      0      0   100%
-datasentinel\scheduler\runner.py                20      5      2      1    73%   40-43, 48
-datasentinel\schema\__init__.py                  4      0      0      0   100%
-datasentinel\schema\diff.py                     25      0     14      0   100%
-datasentinel\schema\fingerprint.py               8      0      0      0   100%
-datasentinel\schema\registry.py                 36      5      4      0    88%   39-40, 55-56, 60
-datasentinel\storage\__init__.py                 2      0      0      0   100%
-datasentinel\storage\history.py                 45      6      0      0    87%   60-61, 96-97, 118-119
+datasentinel/__init__.py                         2      0      0      0   100%
+datasentinel/alerts/__init__.py                  5      0      0      0   100%
+datasentinel/alerts/base.py                      7      1      0      0    86%   18
+datasentinel/alerts/email_notifier.py           50      6     12      5    82%   60, 69, 80, 96->98, 99, 102-103
+datasentinel/alerts/manager.py                  26      4     12      5    76%   20->exit, 21->30, 30->exit, 41, 45, 50-52
+datasentinel/alerts/slack_notifier.py           39     10      8      2    70%   60->69, 70->72, 75-88
+datasentinel/anomaly/__init__.py                 4      0      0      0   100%
+datasentinel/anomaly/detector.py                40      4     20      6    80%   36, 42-44, 63->65, 65->67, 70->72, 72->69
+datasentinel/anomaly/iqr.py                     80      5     32      4    92%   29, 33, 47, 81-82
+datasentinel/anomaly/zscore.py                  62      8     20      5    82%   28, 32, 38, 69-70, 100-102
+datasentinel/cli.py                            218     50     48     15    75%   56->69, 63, 66, 74->78, 89, 116-117, 187->195, 228->231, 235-236, 275, 277->287, 287->exit, 296-298, 326-335, 344-345, 348-352, 370-371, 384-386, 410-434, 478-480
+datasentinel/connectors/__init__.py              8      0      0      0   100%
+datasentinel/connectors/api_connector.py       114     33     38     10    65%   27, 52, 55-59, 64, 68, 71-81, 86->96, 92, 98-100, 116, 121->159, 126-128, 139, 152-157, 168-170
+datasentinel/connectors/base.py                 30      8      0      0    73%   23, 28, 33, 38, 43, 46-47, 55
+datasentinel/connectors/csv_connector.py        52      8      6      1    84%   28, 42-43, 46, 70-71, 85-86
+datasentinel/connectors/excel_connector.py      42     10      6      2    71%   27, 32, 39, 45-46, 58-59, 63-65
+datasentinel/connectors/json_connector.py       64     13     20      5    74%   29, 34, 41, 47-48, 67, 77-81, 92, 95-97
+datasentinel/connectors/registry.py             29      1      2      0    97%   26
+datasentinel/connectors/sql_connector.py       113     26     34      8    73%   27, 32-36, 61-72, 75, 80->89, 82->89, 95, 123->126, 132-133, 153-154, 164-165
+datasentinel/core/__init__.py                    4      0      0      0   100%
+datasentinel/core/dataset.py                    90      5     46      9    90%   29, 46->48, 55, 66, 70, 78->exit, 84, 88->87, 128->120
+datasentinel/core/exceptions.py                 32      1      2      1    94%   16
+datasentinel/core/types.py                      88      0      0      0   100%
+datasentinel/reports/__init__.py                 3      0      0      0   100%
+datasentinel/reports/html_generator.py          37      2      6      1    93%   18->20, 69-70
+datasentinel/reports/pdf_generator.py           70      2     10      1    96%   188->229, 269-270
+datasentinel/rules/__init__.py                  11      0      0      0   100%
+datasentinel/rules/base.py                      30      1      6      0    97%   37
+datasentinel/rules/executor.py                  32      0      8      0   100%
+datasentinel/rules/foreign_key_check.py         55      7     16      3    83%   64-71, 91
+datasentinel/rules/loader.py                    37      4      6      2    86%   23, 31, 54-55
+datasentinel/rules/models.py                    82      1      2      1    98%   51
+datasentinel/rules/null_check.py                34      1      6      1    95%   58
+datasentinel/rules/range_check.py               55      1     22      7    90%   65->67, 67->76, 71->73, 73->76, 82, 87->89, 89->91
+datasentinel/rules/regex_check.py               43      2     10      2    92%   66, 74
+datasentinel/rules/registry.py                  27      3      2      1    86%   28-29, 42
+datasentinel/rules/unique_check.py              37      2      6      2    91%   52, 57
+datasentinel/scheduler/__init__.py               2      0      0      0   100%
+datasentinel/scheduler/runner.py                20      5      2      1    73%   40-43, 48
+datasentinel/schema/__init__.py                  4      0      0      0   100%
+datasentinel/schema/diff.py                     25      0     14      0   100%
+datasentinel/schema/fingerprint.py               8      0      0      0   100%
+datasentinel/schema/registry.py                 36      5      4      0    88%   39-40, 55-56, 60
+datasentinel/storage/__init__.py                 2      0      0      0   100%
+datasentinel/storage/history.py                 45      6      0      0    87%   60-61, 96-97, 118-119
 ----------------------------------------------------------------------------------------
-TOTAL                                         1887    239    420    105    84%
+TOTAL                                         1894    235    426    100    84%
 Coverage HTML written to dir htmlcov
-============================= 48 passed in 27.94s =============================
+============================= 49 passed in 5.01s ==============================
