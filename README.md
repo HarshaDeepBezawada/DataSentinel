@@ -5,7 +5,7 @@
 [![Coverage: >80%](https://img.shields.io/badge/coverage-84%25-brightgreen.svg)](https://pytest.org/)
 [![Live Report: GitHub Pages](https://img.shields.io/badge/Live%20Report-GitHub%20Pages-brightgreen.svg)](https://harshadeepbezawada.github.io/DataSentinel/)
 [![Release: v0.1.0](https://img.shields.io/badge/release-v0.1.0-blue.svg)](https://github.com/HarshaDeepBezawada/DataSentinel/releases)
-[![CI: Multi-OS Matrix](https://img.shields.io/badge/CI-Ubuntu%20%7C%20Windows%20%7C%20macOS-success.svg)](https://github.com/HarshaDeepBezawada/DataSentinel/actions)
+[![CI: Multi-OS (Ubuntu | Windows)](https://github.com/HarshaDeepBezawada/DataSentinel/actions/workflows/ci.yml/badge.svg)](https://github.com/HarshaDeepBezawada/DataSentinel/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![CLI: Typer & Rich](https://img.shields.io/badge/CLI-Typer%20%2B%20Rich-orange.svg)](https://typer.tiangolo.com/)
 
