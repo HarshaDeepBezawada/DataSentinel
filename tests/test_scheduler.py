@@ -1,7 +1,6 @@
 """Tests for APScheduler integration and overlap prevention."""
 
 from unittest.mock import MagicMock
-import pytest
 
 from datasentinel.scheduler.runner import PipelineScheduler
 

@@ -3,8 +3,7 @@
 from __future__ import annotations
 
 import re
-from typing import Any, List, Optional
-import pandas as pd
+from typing import Any
 
 from datasentinel.core.dataset import DataSet
 from datasentinel.core.types import Severity
@@ -25,7 +24,7 @@ class RegexCheckRule(BaseRule):
         column: str,
         pattern: str,
         full_match: bool = True,
-        description: Optional[str] = None,
+        description: str | None = None,
         severity: Severity = Severity.ERROR,
     ) -> None:
         super().__init__(
@@ -51,10 +50,10 @@ class RegexCheckRule(BaseRule):
             severity=config.severity,
         )
 
-    def run_check(self, dataset: DataSet) -> tuple[bool, int, int, List[Any], str]:
+    def run_check(self, dataset: DataSet) -> tuple[bool, int, int, list[Any], str]:
         total_rows = 0
         failed_count = 0
-        samples: List[Any] = []
+        samples: list[Any] = []
 
         for chunk in dataset.iter_chunks():
             total_rows += len(chunk)

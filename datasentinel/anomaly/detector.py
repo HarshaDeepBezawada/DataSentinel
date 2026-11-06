@@ -2,9 +2,14 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
 import pandas as pd
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn
+from rich.progress import (
+    BarColumn,
+    Progress,
+    SpinnerColumn,
+    TextColumn,
+    TimeElapsedColumn,
+)
 
 from datasentinel.anomaly.iqr import IQRAnomalyDetector
 from datasentinel.anomaly.zscore import ZScoreAnomalyDetector
@@ -30,7 +35,7 @@ class StatisticalAnomalyDetector:
             max_samples=config.max_anomalies_to_report,
         )
 
-    def detect_all(self, dataset: DataSet, show_progress: bool = False) -> List[AnomalySummary]:
+    def detect_all(self, dataset: DataSet, show_progress: bool = False) -> list[AnomalySummary]:
         """Detect anomalies across all configured numeric columns."""
         if not self.config.enabled:
             return []
@@ -46,7 +51,7 @@ class StatisticalAnomalyDetector:
                     if pd.api.types.is_numeric_dtype(df_sample[col])
                 ]
 
-        results: List[AnomalySummary] = []
+        results: list[AnomalySummary] = []
         method = self.config.method.lower()
 
         if show_progress:

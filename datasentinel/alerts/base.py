@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+
 from datasentinel.core.types import PipelineRunResult
 
 
@@ -15,4 +16,3 @@ class BaseAlertNotifier(ABC):
 
         Must not include raw data rows — only summary counts and top violations.
         """
-        pass

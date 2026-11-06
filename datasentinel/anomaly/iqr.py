@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import random
-from typing import List, Optional, Tuple
+
 import numpy as np
 import pandas as pd
 
@@ -18,9 +18,9 @@ class IQRAnomalyDetector:
         self.multiplier = multiplier
         self.max_samples = max_samples
 
-    def _compute_quartiles(self, dataset: DataSet, column: str) -> Tuple[float, float, int]:
+    def _compute_quartiles(self, dataset: DataSet, column: str) -> tuple[float, float, int]:
         """Estimate Q1 and Q3 via reservoir sample or numeric series."""
-        sample_buffer: List[float] = []
+        sample_buffer: list[float] = []
         max_buffer = 100_000
         total_count = 0
 
@@ -70,7 +70,7 @@ class IQRAnomalyDetector:
         lower_fence = q1 - (self.multiplier * iqr)
         upper_fence = q3 + (self.multiplier * iqr)
 
-        anomalies: List[AnomalyPoint] = []
+        anomalies: list[AnomalyPoint] = []
         total_anomalies = 0
         row_offset = 0
 

@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
 import time
-from typing import Any, List, Optional
+from abc import ABC, abstractmethod
+from typing import Any
 
 from datasentinel.core.dataset import DataSet
 from datasentinel.core.types import RuleResult, Severity, ValidationStatus
@@ -18,7 +18,7 @@ class BaseRule(ABC):
         rule_id: str,
         rule_type: str,
         column: str,
-        description: Optional[str] = None,
+        description: str | None = None,
         severity: Severity = Severity.ERROR,
     ) -> None:
         self.rule_id = rule_id
@@ -28,13 +28,12 @@ class BaseRule(ABC):
         self.severity = severity
 
     @abstractmethod
-    def run_check(self, dataset: DataSet) -> tuple[bool, int, int, List[Any], str]:
+    def run_check(self, dataset: DataSet) -> tuple[bool, int, int, list[Any], str]:
         """Execute the validation logic on the given dataset.
 
         Returns:
             tuple of (passed, total_rows, failed_rows, sample_failures, message)
         """
-        pass
 
     def evaluate(self, dataset: DataSet) -> RuleResult:
         """Run the rule, measure execution time, and format a standardized RuleResult."""

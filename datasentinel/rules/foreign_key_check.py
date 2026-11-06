@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, List, Optional, Set
+from typing import Any
+
 import pandas as pd
 
 from datasentinel.core.dataset import DataSet
@@ -22,10 +23,10 @@ class ForeignKeyRule(BaseRule):
         self,
         rule_id: str,
         column: str,
-        reference_column: Optional[str] = None,
-        reference_values: Optional[List[Any]] = None,
-        reference_dataset: Optional[str] = None,
-        description: Optional[str] = None,
+        reference_column: str | None = None,
+        reference_values: list[Any] | None = None,
+        reference_dataset: str | None = None,
+        description: str | None = None,
         severity: Severity = Severity.ERROR,
     ) -> None:
         super().__init__(
@@ -52,7 +53,7 @@ class ForeignKeyRule(BaseRule):
             severity=config.severity,
         )
 
-    def _load_reference_keys(self, dataset: DataSet) -> Set[Any]:
+    def _load_reference_keys(self, dataset: DataSet) -> set[Any]:
         """Resolve valid keys from reference values, cross-column, or external file."""
         if self.reference_values is not None:
             return set(self.reference_values)
@@ -70,12 +71,12 @@ class ForeignKeyRule(BaseRule):
 
         return set()
 
-    def run_check(self, dataset: DataSet) -> tuple[bool, int, int, List[Any], str]:
+    def run_check(self, dataset: DataSet) -> tuple[bool, int, int, list[Any], str]:
         valid_keys = self._load_reference_keys(dataset)
 
         total_rows = 0
         failed_count = 0
-        samples: List[Any] = []
+        samples: list[Any] = []
 
         for chunk in dataset.iter_chunks():
             total_rows += len(chunk)

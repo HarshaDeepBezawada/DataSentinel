@@ -11,10 +11,9 @@ Runs an automated end-to-end evaluation in ~10 seconds:
 
 from __future__ import annotations
 
-import os
-from pathlib import Path
 import sys
 import time
+from pathlib import Path
 
 try:
     from rich.console import Console
@@ -49,9 +48,9 @@ def main() -> int:
 
     # Stage 1: Multi-Source Connector & Quality Rule Validations
     log_step(1, "Validating Multi-Source Data Ingestion (CSV, JSON, Excel, SQLite)")
-    from datasentinel.rules.loader import RuleLoader
-    from datasentinel.rules.executor import RuleExecutor
     from datasentinel.connectors.registry import ConnectorRegistry
+    from datasentinel.rules.executor import RuleExecutor
+    from datasentinel.rules.loader import RuleLoader
 
     sample_configs = [
         ("CSV Format", "config/ecommerce_orders.yaml"),
@@ -119,17 +118,17 @@ def main() -> int:
 
     # Stage 3: Streaming Statistical Anomaly Detection (500,000 Rows Benchmark)
     log_step(3, "Benchmarking Streaming Anomaly Detection at Scale (500,000 Rows)")
-    from datasentinel.anomaly.detector import StatisticalAnomalyDetector
-    from datasentinel.rules.models import AnomalyConfig
     import numpy as np
     import pandas as pd
+
+    from datasentinel.anomaly.detector import StatisticalAnomalyDetector
     from datasentinel.core.dataset import DataSet
+    from datasentinel.rules.models import AnomalyConfig
 
     t_anom_start = time.perf_counter()
-    chunk_size = 50000
     total_rows = 500000
 
-    def generate_large_stream(c_size: int):
+    def generate_large_stream(c_size: int = 50000):
         rng = np.random.default_rng(42)
         n_chunks = total_rows // c_size
         for i in range(n_chunks):
@@ -162,9 +161,9 @@ def main() -> int:
 
     # Stage 4: Executive Report Generation (HTML & PDF)
     log_step(4, "Generating Executive HTML & PDF Reports with Embedded Charts")
+    from datasentinel.cli import _run_pipeline
     from datasentinel.reports.html_generator import HTMLReportGenerator
     from datasentinel.reports.pdf_generator import PDFReportGenerator
-    from datasentinel.cli import _run_pipeline
 
     run_res = _run_pipeline(Path("config/ecommerce_orders.yaml"), show_progress=False)
     html_target = Path("reports/sample_report.html")
@@ -181,7 +180,7 @@ def main() -> int:
     if console:
         console.print(f"[bold green][OK][/bold green] Executive HTML Report: {html_target} (Chart.js embedded)")
         console.print(f"[bold green][OK][/bold green] Executive PDF Report:  {pdf_target} (ReportLab vector rendered)")
-        console.print(f"[bold green][OK][/bold green] GitHub Pages Preview:  docs/index.html")
+        console.print("[bold green][OK][/bold green] GitHub Pages Preview:  docs/index.html")
     else:
         print(f"  * Generated HTML: {html_target}")
         print(f"  * Generated PDF:  {pdf_target}")

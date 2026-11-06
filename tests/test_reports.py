@@ -1,6 +1,7 @@
 """Tests for HTML and PDF report generators."""
 
 from pathlib import Path
+
 import pytest
 
 from datasentinel.core.types import (

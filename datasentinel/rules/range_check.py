@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, List, Optional
+from typing import Any
+
 import pandas as pd
 
 from datasentinel.core.dataset import DataSet
@@ -21,10 +22,10 @@ class RangeCheckRule(BaseRule):
         self,
         rule_id: str,
         column: str,
-        min_value: Optional[float] = None,
-        max_value: Optional[float] = None,
+        min_value: float | None = None,
+        max_value: float | None = None,
         inclusive: bool = True,
-        description: Optional[str] = None,
+        description: str | None = None,
         severity: Severity = Severity.ERROR,
     ) -> None:
         super().__init__(
@@ -51,10 +52,10 @@ class RangeCheckRule(BaseRule):
             severity=config.severity,
         )
 
-    def run_check(self, dataset: DataSet) -> tuple[bool, int, int, List[Any], str]:
+    def run_check(self, dataset: DataSet) -> tuple[bool, int, int, list[Any], str]:
         total_rows = 0
         failed_count = 0
-        samples: List[Any] = []
+        samples: list[Any] = []
 
         for chunk in dataset.iter_chunks():
             total_rows += len(chunk)

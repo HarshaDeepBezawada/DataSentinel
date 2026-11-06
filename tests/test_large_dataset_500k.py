@@ -1,9 +1,9 @@
 """Verification and benchmark test for 500,000-row dataset streaming anomaly detection."""
 
 import os
+
 import numpy as np
 import pandas as pd
-import pytest
 
 from datasentinel.anomaly.iqr import IQRAnomalyDetector
 from datasentinel.anomaly.zscore import ZScoreAnomalyDetector
@@ -69,6 +69,7 @@ def test_500k_rows_streaming_anomaly_detection() -> None:
     iqr_summary = iqr_detector.detect(dataset, "metric_value")
 
     mem_after_iqr_mb = get_memory_mb()
+    assert mem_after_iqr_mb - mem_before_mb < 200.0
 
     assert iqr_summary.total_anomalies >= 2
     iqr_vals = [p.value for p in iqr_summary.sample_anomalies]

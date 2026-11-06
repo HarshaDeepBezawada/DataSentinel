@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 import os
 import smtplib
-from typing import List, Optional
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 from datasentinel.alerts.base import BaseAlertNotifier
 from datasentinel.core.exceptions import AlertNotificationError
@@ -18,9 +17,9 @@ class EmailNotifier(BaseAlertNotifier):
 
     def __init__(
         self,
-        recipients: List[str],
-        smtp_host: Optional[str] = None,
-        smtp_port: Optional[int] = None,
+        recipients: list[str],
+        smtp_host: str | None = None,
+        smtp_port: int | None = None,
         use_tls: bool = True,
     ) -> None:
         self.recipients = recipients

@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import os
 import re
-from typing import Any, Dict, Iterator, Optional
+from collections.abc import Iterator
+from typing import Any
+
 import pandas as pd
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
@@ -44,7 +46,7 @@ def _resolve_env_placeholders(val: str) -> str:
 class SQLConnector(BaseConnector):
     """Adapter for relational databases (SQLite, PostgreSQL) using SQLAlchemy 2.0."""
 
-    def __init__(self, name: str, options: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(self, name: str, options: dict[str, Any] | None = None) -> None:
         super().__init__(name, options)
         connection_url = str(self.options.get("connection_url") or self.options.get("url", ""))
 
@@ -89,7 +91,7 @@ class SQLConnector(BaseConnector):
         self.connection_url = _resolve_env_placeholders(connection_url)
         self.table_name = self.options.get("table")
         self.query = self.options.get("query")
-        self._engine: Optional[Engine] = None
+        self._engine: Engine | None = None
 
         if not self.table_name and not self.query:
             raise ConnectorError(

@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import json
 import os
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Optional
+from typing import Any
+
 import pandas as pd
 
 from datasentinel.connectors.base import BaseConnector
@@ -19,7 +21,7 @@ from datasentinel.core.exceptions import ConnectorError, SourceNotFoundError
 class JSONConnector(BaseConnector):
     """Adapter for reading flat or nested JSON / JSONL files."""
 
-    def __init__(self, name: str, options: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(self, name: str, options: dict[str, Any] | None = None) -> None:
         super().__init__(name, options)
         self.file_path = str(self.options.get("path", ""))
         self.nested_path = self.options.get("nested_path")  # e.g. "data.records" or "results"

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from typing import List
 from datasentinel.core.types import DriftItem, DriftReport, DriftType, SchemaFingerprint
 
 
@@ -16,7 +15,7 @@ class SchemaDriftDetector:
         current: SchemaFingerprint,
     ) -> DriftReport:
         """Compare two schema fingerprints and report any schema drift."""
-        diffs: List[DriftItem] = []
+        diffs: list[DriftItem] = []
 
         baseline_cols = baseline.columns
         current_cols = current.columns

@@ -1,7 +1,6 @@
 """Tests for statistical anomaly detection (Z-Score and IQR)."""
 
 import pandas as pd
-import pytest
 
 from datasentinel.anomaly.detector import StatisticalAnomalyDetector
 from datasentinel.anomaly.iqr import IQRAnomalyDetector

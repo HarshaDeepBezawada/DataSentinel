@@ -2,34 +2,39 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn
+from rich.progress import (
+    BarColumn,
+    Progress,
+    SpinnerColumn,
+    TextColumn,
+    TimeElapsedColumn,
+)
 
 from datasentinel.core.dataset import DataSet
-from datasentinel.core.types import RuleResult, ValidationStatus
+from datasentinel.core.types import RuleResult
 from datasentinel.rules.base import BaseRule
-from datasentinel.rules.models import PipelineConfig, RuleConfig
+from datasentinel.rules.models import PipelineConfig
 from datasentinel.rules.registry import RuleRegistry
 
 
 class RuleExecutor:
     """Executes a suite of validation rules against a DataSet."""
 
-    def __init__(self, rules: List[BaseRule]) -> None:
+    def __init__(self, rules: list[BaseRule]) -> None:
         self.rules = rules
 
     @classmethod
     def from_pipeline_config(cls, config: PipelineConfig) -> RuleExecutor:
         """Construct executor directly from a validated PipelineConfig."""
-        rules: List[BaseRule] = []
+        rules: list[BaseRule] = []
         for rule_cfg in config.rules:
             rule_instance = RuleRegistry.create_from_config(rule_cfg)
             rules.append(rule_instance)
         return cls(rules)
 
-    def execute(self, dataset: DataSet, show_progress: bool = False) -> List[RuleResult]:
+    def execute(self, dataset: DataSet, show_progress: bool = False) -> list[RuleResult]:
         """Execute all rules, optionally showing a Rich progress bar."""
-        results: List[RuleResult] = []
+        results: list[RuleResult] = []
 
         if show_progress:
             with Progress(

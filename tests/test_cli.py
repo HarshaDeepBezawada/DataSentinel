@@ -1,7 +1,7 @@
 """Tests for Typer CLI commands."""
 
 from pathlib import Path
-import pytest
+
 from typer.testing import CliRunner
 
 from datasentinel.cli import app

@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
-from typing import Dict, List, Optional
 
 from datasentinel.core.exceptions import SchemaDriftError
 from datasentinel.core.types import SchemaFingerprint
@@ -13,11 +11,11 @@ from datasentinel.core.types import SchemaFingerprint
 class SchemaRegistry:
     """Manages persistent baseline fingerprints for pipeline schema monitoring."""
 
-    def __init__(self, storage_dir: Optional[Path] = None) -> None:
+    def __init__(self, storage_dir: Path | None = None) -> None:
         self.storage_dir = storage_dir or Path(".datasentinel/schemas")
         self.storage_dir.mkdir(parents=True, exist_ok=True)
 
-    def _get_path(self, pipeline_name: str, custom_path: Optional[Path] = None) -> Path:
+    def _get_path(self, pipeline_name: str, custom_path: Path | None = None) -> Path:
         if custom_path:
             return custom_path
         safe_name = "".join(c if c.isalnum() or c in ("-", "_") else "_" for c in pipeline_name)
@@ -27,7 +25,7 @@ class SchemaRegistry:
         self,
         pipeline_name: str,
         fingerprint: SchemaFingerprint,
-        custom_path: Optional[Path] = None,
+        custom_path: Path | None = None,
     ) -> Path:
         """Persist a baseline schema fingerprint to disk."""
         target_path = self._get_path(pipeline_name, custom_path)
@@ -42,8 +40,8 @@ class SchemaRegistry:
     def load_baseline(
         self,
         pipeline_name: str,
-        custom_path: Optional[Path] = None,
-    ) -> Optional[SchemaFingerprint]:
+        custom_path: Path | None = None,
+    ) -> SchemaFingerprint | None:
         """Load a persisted baseline schema fingerprint, or None if not found."""
         target_path = self._get_path(pipeline_name, custom_path)
         if not target_path.is_file():
@@ -55,6 +53,6 @@ class SchemaRegistry:
         except Exception as e:
             raise SchemaDriftError(f"Failed to load baseline schema from '{target_path}': {e}") from e
 
-    def list_baselines(self) -> List[str]:
+    def list_baselines(self) -> list[str]:
         """Return names of all stored baselines."""
         return [p.stem.replace("_baseline", "") for p in self.storage_dir.glob("*_baseline.json")]

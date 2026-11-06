@@ -1,7 +1,6 @@
 """Tests for SQLite run history storage and trend analysis."""
 
 from pathlib import Path
-import pytest
 
 from datasentinel.core.types import PipelineRunResult, ValidationStatus
 from datasentinel.storage.history import RunHistoryStore

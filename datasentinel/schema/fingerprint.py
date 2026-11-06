@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Union
 from datasentinel.core.dataset import DataSet
 from datasentinel.core.types import SchemaFingerprint
 

@@ -2,16 +2,15 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from pathlib import Path
 import time
-from typing import Optional
 import uuid
+from datetime import UTC, datetime
+from pathlib import Path
 
+import typer
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
-import typer
 
 from datasentinel.alerts.manager import AlertManager
 from datasentinel.anomaly.detector import StatisticalAnomalyDetector
@@ -94,7 +93,7 @@ def _run_pipeline(config_path: Path, show_progress: bool = True) -> PipelineRunR
     run_result = PipelineRunResult(
         run_id=f"run-{uuid.uuid4().hex[:8]}",
         pipeline_name=pipeline_config.name,
-        timestamp=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
+        timestamp=datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC"),
         duration_ms=round(elapsed_ms, 2),
         total_rows=total_rows,
         total_columns=total_cols,
@@ -132,7 +131,7 @@ def validate_command(
         "-q",
         help="Suppress progress bars and verbose messages.",
     ),
-    export_json: Optional[Path] = typer.Option(
+    export_json: Path | None = typer.Option(
         None,
         "--export-json",
         "-j",
@@ -243,13 +242,13 @@ def report_command(
         help="Path to YAML rule configuration file.",
         exists=True,
     ),
-    html: Optional[Path] = typer.Option(
+    html: Path | None = typer.Option(
         None,
         "--html",
         "-h",
         help="Target file path for executive HTML report.",
     ),
-    pdf: Optional[Path] = typer.Option(
+    pdf: Path | None = typer.Option(
         None,
         "--pdf",
         "-p",
@@ -265,7 +264,7 @@ def report_command(
       datasentinel report config/ecommerce_orders.yaml --html reports/out.html --pdf reports/out.pdf
     """
     try:
-        console.print(f"[cyan]Executing pipeline for report generation...[/cyan]")
+        console.print("[cyan]Executing pipeline for report generation...[/cyan]")
         result = _run_pipeline(config, show_progress=True)
         pipeline_cfg = RuleLoader.load_pipeline(config)
         history_store = RunHistoryStore()
@@ -305,7 +304,7 @@ def compare_schemas_command(
         help="Target data source file (e.g. data.csv, data.json) or config YAML.",
         exists=True,
     ),
-    baseline: Optional[Path] = typer.Option(
+    baseline: Path | None = typer.Option(
         None,
         "--baseline",
         "-b",
@@ -346,8 +345,7 @@ def compare_schemas_command(
 
             if baseline.suffix == ".json":
                 try:
-                    with open(baseline, "r", encoding="utf-8") as f:
-                        base_fp = SchemaRegistry().load_baseline(baseline.stem, baseline)
+                    base_fp = SchemaRegistry().load_baseline(baseline.stem, baseline)
                 except Exception:
                     base_fp = None
             else:
@@ -421,7 +419,7 @@ def schedule_command(
         def job() -> None:
             console.print(f"\n[dim][{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Triggering scheduled validation...[/dim]")
             _run_pipeline(config, show_progress=False)
-            console.print(f"[green]Validation run completed and stored.[/green]")
+            console.print("[green]Validation run completed and stored.[/green]")
 
         scheduler = PipelineScheduler()
         scheduler.schedule_cron(cron, job)

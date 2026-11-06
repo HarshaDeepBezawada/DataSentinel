@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from contextlib import contextmanager
-import json
-from pathlib import Path
 import sqlite3
-from typing import Any, Dict, Iterator, List, Optional
+from collections.abc import Iterator
+from contextlib import contextmanager
+from pathlib import Path
+from typing import Any
 
 from datasentinel.core.exceptions import StorageError
 from datasentinel.core.types import PipelineRunResult
@@ -15,7 +15,7 @@ from datasentinel.core.types import PipelineRunResult
 class RunHistoryStore:
     """Manages SQLite storage for historical pipeline validation runs."""
 
-    def __init__(self, db_path: Optional[Path] = None) -> None:
+    def __init__(self, db_path: Path | None = None) -> None:
         self.db_path = db_path or Path(".datasentinel/history.db")
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._init_db()
@@ -66,10 +66,9 @@ class RunHistoryStore:
         drift_count = len(result.drift_report.diffs) if result.drift_report else 0
 
         try:
-            with self._connection() as conn:
-                with conn:
-                    conn.execute(
-                        """
+            with self._connection() as conn, conn:
+                conn.execute(
+                    """
                         INSERT INTO run_history (
                             run_id, pipeline_name, timestamp, duration_ms,
                             total_rows, total_columns, rules_passed, rules_failed,
@@ -77,26 +76,26 @@ class RunHistoryStore:
                             details_json
                         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                         """,
-                        (
-                            result.run_id,
-                            result.pipeline_name,
-                            result.timestamp,
-                            result.duration_ms,
-                            result.total_rows,
-                            result.total_columns,
-                            result.rules_passed,
-                            result.rules_failed,
-                            result.rules_warning,
-                            total_anomalies,
-                            drift_count,
-                            result.overall_status.value,
-                            result.model_dump_json(),
-                        ),
-                    )
+                    (
+                        result.run_id,
+                        result.pipeline_name,
+                        result.timestamp,
+                        result.duration_ms,
+                        result.total_rows,
+                        result.total_columns,
+                        result.rules_passed,
+                        result.rules_failed,
+                        result.rules_warning,
+                        total_anomalies,
+                        drift_count,
+                        result.overall_status.value,
+                        result.model_dump_json(),
+                    ),
+                )
         except Exception as e:
             raise StorageError(f"Failed to record run history for '{result.run_id}': {e}") from e
 
-    def get_recent_runs(self, pipeline_name: str, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_recent_runs(self, pipeline_name: str, limit: int = 10) -> list[dict[str, Any]]:
         """Retrieve recent runs for trend line visualization."""
         try:
             with self._connection() as conn:

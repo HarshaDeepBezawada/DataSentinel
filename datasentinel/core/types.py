@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 from pydantic import BaseModel, Field
 
 
@@ -45,7 +46,7 @@ class SchemaFingerprint(BaseModel):
     dataset_name: str
     column_count: int
     row_count: int
-    columns: Dict[str, ColumnSchema]
+    columns: dict[str, ColumnSchema]
     generated_at: str
 
 
@@ -53,8 +54,8 @@ class DriftItem(BaseModel):
     """Individual schema difference item."""
     drift_type: DriftType
     column_name: str
-    baseline_value: Optional[str] = None
-    current_value: Optional[str] = None
+    baseline_value: str | None = None
+    current_value: str | None = None
     message: str
 
 
@@ -63,7 +64,7 @@ class DriftReport(BaseModel):
     baseline_name: str
     current_name: str
     has_drift: bool
-    diffs: List[DriftItem] = Field(default_factory=list)
+    diffs: list[DriftItem] = Field(default_factory=list)
     summary: str = ""
 
 
@@ -77,7 +78,7 @@ class RuleResult(BaseModel):
     total_rows: int
     failed_rows: int
     failure_rate: float
-    sample_failures: List[Any] = Field(default_factory=list)
+    sample_failures: list[Any] = Field(default_factory=list)
     message: str
     execution_time_ms: float = 0.0
 
@@ -89,8 +90,8 @@ class AnomalyPoint(BaseModel):
     value: float
     score: float
     method: str
-    lower_bound: Optional[float] = None
-    upper_bound: Optional[float] = None
+    lower_bound: float | None = None
+    upper_bound: float | None = None
     message: str
 
 
@@ -100,11 +101,11 @@ class AnomalySummary(BaseModel):
     method: str
     total_anomalies: int
     anomaly_rate: float
-    sample_anomalies: List[AnomalyPoint] = Field(default_factory=list)
-    mean: Optional[float] = None
-    std: Optional[float] = None
-    q1: Optional[float] = None
-    q3: Optional[float] = None
+    sample_anomalies: list[AnomalyPoint] = Field(default_factory=list)
+    mean: float | None = None
+    std: float | None = None
+    q1: float | None = None
+    q3: float | None = None
 
 
 class PipelineRunResult(BaseModel):
@@ -118,7 +119,7 @@ class PipelineRunResult(BaseModel):
     rules_passed: int
     rules_failed: int
     rules_warning: int
-    rule_results: List[RuleResult] = Field(default_factory=list)
-    drift_report: Optional[DriftReport] = None
-    anomalies: List[AnomalySummary] = Field(default_factory=list)
+    rule_results: list[RuleResult] = Field(default_factory=list)
+    drift_report: DriftReport | None = None
+    anomalies: list[AnomalySummary] = Field(default_factory=list)
     overall_status: ValidationStatus

@@ -1,6 +1,7 @@
 """Tests for email and Slack alert notifiers."""
 
 from unittest.mock import MagicMock, patch
+
 import pytest
 
 from datasentinel.alerts.email_notifier import EmailNotifier

@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import os
 import re
-from typing import Any, Dict, Iterator, List, Optional
+from collections.abc import Iterator
+from typing import Any
+
 import httpx
 import pandas as pd
 
@@ -20,15 +22,15 @@ from datasentinel.core.exceptions import ConnectionFailedError, ConnectorError
 class RestAPIConnector(BaseConnector):
     """Adapter for fetching data from REST APIs with pagination support."""
 
-    def __init__(self, name: str, options: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(self, name: str, options: dict[str, Any] | None = None) -> None:
         super().__init__(name, options)
         self.endpoint_url = str(self.options.get("url") or self.options.get("endpoint", ""))
         if not self.endpoint_url:
             raise ConnectorError(f"RestAPIConnector '{name}': 'url' is required.")
 
         self.method = str(self.options.get("method", "GET")).upper()
-        self.headers: Dict[str, str] = dict(self.options.get("headers", {}))
-        self.params: Dict[str, Any] = dict(self.options.get("params", {}))
+        self.headers: dict[str, str] = dict(self.options.get("headers", {}))
+        self.params: dict[str, Any] = dict(self.options.get("params", {}))
         self.nested_path = self.options.get("nested_path")  # Path to data array, e.g. "data" or "results"
         self.timeout = float(self.options.get("timeout", 30.0))
 
@@ -80,7 +82,7 @@ class RestAPIConnector(BaseConnector):
         except Exception:
             return False
 
-    def _extract_items(self, response_data: Any) -> List[Dict[str, Any]]:
+    def _extract_items(self, response_data: Any) -> list[dict[str, Any]]:
         """Navigate nested keys to locate the items array."""
         data = response_data
         if self.nested_path:
@@ -101,7 +103,7 @@ class RestAPIConnector(BaseConnector):
 
     def fetch_data(self) -> DataSet:
         self.connect()
-        all_records: List[Dict[str, Any]] = []
+        all_records: list[dict[str, Any]] = []
 
         try:
             with httpx.Client(timeout=self.timeout) as client:

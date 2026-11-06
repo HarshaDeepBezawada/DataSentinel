@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, List, Optional
+from typing import Any
+
 from datasentinel.core.dataset import DataSet
 from datasentinel.core.types import Severity
 from datasentinel.rules.base import BaseRule
@@ -21,7 +22,7 @@ class NullCheckRule(BaseRule):
         column: str,
         allow_nulls: bool = False,
         max_null_rate: float = 0.0,
-        description: Optional[str] = None,
+        description: str | None = None,
         severity: Severity = Severity.ERROR,
     ) -> None:
         super().__init__(
@@ -46,7 +47,7 @@ class NullCheckRule(BaseRule):
             severity=config.severity,
         )
 
-    def run_check(self, dataset: DataSet) -> tuple[bool, int, int, List[Any], str]:
+    def run_check(self, dataset: DataSet) -> tuple[bool, int, int, list[Any], str]:
         total_rows = 0
         null_count = 0
 
@@ -74,5 +75,5 @@ class NullCheckRule(BaseRule):
                 else f"Column '{self.column}' null rate {actual_null_rate:.2%} is within allowed threshold {self.max_null_rate:.2%}."
             )
 
-        samples: List[Any] = [None] if null_count > 0 else []
+        samples: list[Any] = [None] if null_count > 0 else []
         return passed, total_rows, null_count, samples, msg

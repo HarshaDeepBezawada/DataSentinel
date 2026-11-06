@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import math
-from typing import List, Optional, Tuple
+
 import pandas as pd
 
 from datasentinel.core.dataset import DataSet
@@ -17,7 +17,7 @@ class ZScoreAnomalyDetector:
         self.threshold = threshold
         self.max_samples = max_samples
 
-    def _compute_mean_and_std(self, dataset: DataSet, column: str) -> Tuple[float, float, int]:
+    def _compute_mean_and_std(self, dataset: DataSet, column: str) -> tuple[float, float, int]:
         """First streaming pass: compute population mean and sample standard deviation (Welford/sum)."""
         count = 0
         sum_x = 0.0
@@ -57,7 +57,7 @@ class ZScoreAnomalyDetector:
                 std=round(std, 4),
             )
 
-        anomalies: List[AnomalyPoint] = []
+        anomalies: list[AnomalyPoint] = []
         total_anomalies = 0
         row_offset = 0
 

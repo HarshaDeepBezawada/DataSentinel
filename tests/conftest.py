@@ -1,8 +1,8 @@
 """Pytest fixtures for DataSentinel test suite."""
 
-import os
-from pathlib import Path
 import tempfile
+from pathlib import Path
+
 import pandas as pd
 import pytest
 

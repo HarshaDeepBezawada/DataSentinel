@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 import httpx
 
 from datasentinel.alerts.base import BaseAlertNotifier
@@ -17,14 +18,14 @@ class SlackNotifier(BaseAlertNotifier):
     def __init__(
         self,
         webhook_url_env: str = "SLACK_WEBHOOK_URL",
-        channel: Optional[str] = None,
+        channel: str | None = None,
     ) -> None:
         self.webhook_url_env = webhook_url_env
         self.channel = channel
         # Sensitive webhook URL read strictly from environment variable
         self.webhook_url = os.getenv(webhook_url_env)
 
-    def _build_slack_payload(self, result: PipelineRunResult) -> Dict[str, Any]:
+    def _build_slack_payload(self, result: PipelineRunResult) -> dict[str, Any]:
         """Construct Slack Block Kit payload with summary metrics and top violations."""
         total_rules = result.rules_passed + result.rules_failed + result.rules_warning
         pass_rate = (result.rules_passed / total_rules * 100.0) if total_rules > 0 else 100.0
@@ -32,7 +33,7 @@ class SlackNotifier(BaseAlertNotifier):
 
         status_emoji = "✅" if result.rules_failed == 0 else "🚨"
 
-        blocks: List[Dict[str, Any]] = [
+        blocks: list[dict[str, Any]] = [
             {
                 "type": "header",
                 "text": {
@@ -66,7 +67,7 @@ class SlackNotifier(BaseAlertNotifier):
                 "text": {"type": "mrkdwn", "text": violation_text},
             })
 
-        payload: Dict[str, Any] = {"blocks": blocks}
+        payload: dict[str, Any] = {"blocks": blocks}
         if self.channel:
             payload["channel"] = self.channel
         return payload

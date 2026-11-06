@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from datasentinel.core.exceptions import ReportGenerationError
@@ -14,7 +14,7 @@ from datasentinel.storage.history import RunHistoryStore
 class HTMLReportGenerator:
     """Generates executive-quality HTML data quality reports."""
 
-    def __init__(self, template_dir: Optional[Path] = None) -> None:
+    def __init__(self, template_dir: Path | None = None) -> None:
         if template_dir is None:
             template_dir = Path(__file__).parent / "templates"
         self.template_dir = template_dir
@@ -28,7 +28,7 @@ class HTMLReportGenerator:
         result: PipelineRunResult,
         output_path: Path,
         source_name: str = "Primary",
-        history_store: Optional[RunHistoryStore] = None,
+        history_store: RunHistoryStore | None = None,
     ) -> Path:
         """Render and save HTML report."""
         try:
@@ -36,9 +36,9 @@ class HTMLReportGenerator:
             pass_rate = (result.rules_passed / total_rules * 100.0) if total_rules > 0 else 100.0
             total_anomalies = sum(a.total_anomalies for a in result.anomalies)
 
-            history_labels: List[str] = []
-            history_pass_rates: List[float] = []
-            history_anomalies: List[int] = []
+            history_labels: list[str] = []
+            history_pass_rates: list[float] = []
+            history_anomalies: list[int] = []
 
             if history_store:
                 recent = history_store.get_recent_runs(result.pipeline_name, limit=8)

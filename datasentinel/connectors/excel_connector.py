@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import os
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Any, Dict, Iterator, Optional
+from typing import Any
+
 import pandas as pd
 
 from datasentinel.connectors.base import BaseConnector
@@ -18,7 +20,7 @@ from datasentinel.core.exceptions import ConnectorError, SourceNotFoundError
 class ExcelConnector(BaseConnector):
     """Adapter for reading Microsoft Excel files (.xlsx, .xls)."""
 
-    def __init__(self, name: str, options: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(self, name: str, options: dict[str, Any] | None = None) -> None:
         super().__init__(name, options)
         self.file_path = str(self.options.get("path", ""))
         self.sheet_name = self.options.get("sheet_name", 0)

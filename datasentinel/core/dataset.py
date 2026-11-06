@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from typing import Any, Callable, Dict, Iterator, List, Optional, Set, Tuple, Union
-import numpy as np
+from collections.abc import Callable, Iterator
+from datetime import UTC, datetime
+from typing import Any
+
 import pandas as pd
 
 from datasentinel.core.types import ColumnSchema, SchemaFingerprint
@@ -16,12 +17,12 @@ class DataSet:
     def __init__(
         self,
         name: str,
-        data: Optional[pd.DataFrame] = None,
-        chunk_supplier: Optional[Callable[[int], Iterator[pd.DataFrame]]] = None,
-        total_rows_hint: Optional[int] = None,
+        data: pd.DataFrame | None = None,
+        chunk_supplier: Callable[[int], Iterator[pd.DataFrame]] | None = None,
+        total_rows_hint: int | None = None,
     ) -> None:
         self.name = name
-        self._df: Optional[pd.DataFrame] = data
+        self._df: pd.DataFrame | None = data
         self._chunk_supplier = chunk_supplier
         self._total_rows_hint = total_rows_hint
 
@@ -36,7 +37,7 @@ class DataSet:
             self._shape = (self._total_rows_hint or 0, 0)
 
     @property
-    def columns(self) -> List[str]:
+    def columns(self) -> list[str]:
         """Return list of column names."""
         if self._df is not None:
             return list(self._df.columns)
@@ -48,7 +49,7 @@ class DataSet:
         return self._columns
 
     @property
-    def shape(self) -> Tuple[int, int]:
+    def shape(self) -> tuple[int, int]:
         """Return (rows, cols) shape."""
         if self._df is not None:
             return (int(self._df.shape[0]), int(self._df.shape[1]))
@@ -78,11 +79,11 @@ class DataSet:
         elif self._chunk_supplier is not None:
             yield from self._chunk_supplier(chunk_size)
 
-    def null_counts(self) -> Dict[str, int]:
+    def null_counts(self) -> dict[str, int]:
         """Compute null counts per column efficiently."""
         if self._df is not None:
             return {col: int(self._df[col].isna().sum()) for col in self.columns}
-        counts: Dict[str, int] = {col: 0 for col in self.columns}
+        counts: dict[str, int] = {col: 0 for col in self.columns}
         for chunk in self.iter_chunks():
             for col in self.columns:
                 if col in chunk.columns:
@@ -91,7 +92,7 @@ class DataSet:
 
     def fingerprint(self) -> SchemaFingerprint:
         """Generate a baseline schema fingerprint for schema drift detection."""
-        col_schemas: Dict[str, ColumnSchema] = {}
+        col_schemas: dict[str, ColumnSchema] = {}
         total_rows = 0
 
         if self._df is not None:
@@ -111,9 +112,9 @@ class DataSet:
                 )
         else:
             # Chunked accumulation for large datasets
-            null_accum: Dict[str, int] = {}
-            unique_sets: Dict[str, set[Any]] = {}
-            dtype_map: Dict[str, str] = {}
+            null_accum: dict[str, int] = {}
+            unique_sets: dict[str, set[Any]] = {}
+            dtype_map: dict[str, str] = {}
 
             for chunk in self.iter_chunks():
                 total_rows += len(chunk)
@@ -144,5 +145,5 @@ class DataSet:
             column_count=len(col_schemas),
             row_count=total_rows,
             columns=col_schemas,
-            generated_at=datetime.now(timezone.utc).isoformat(),
+            generated_at=datetime.now(UTC).isoformat(),
         )

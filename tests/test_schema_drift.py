@@ -1,8 +1,8 @@
 """Tests for schema fingerprinting, registry, and drift detection."""
 
 from pathlib import Path
+
 import pandas as pd
-import pytest
 
 from datasentinel.core.dataset import DataSet
 from datasentinel.core.types import DriftType

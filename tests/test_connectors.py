@@ -1,20 +1,23 @@
 """Tests for data connectors and connector registry."""
 
 import json
-from pathlib import Path
 import sqlite3
+from pathlib import Path
+
+import httpx
 import pandas as pd
 import pytest
-import httpx
 
-from datasentinel.connectors.base import BaseConnector
-from datasentinel.connectors.registry import ConnectorRegistry
+from datasentinel.connectors.api_connector import RestAPIConnector
 from datasentinel.connectors.csv_connector import CSVConnector
 from datasentinel.connectors.excel_connector import ExcelConnector
 from datasentinel.connectors.json_connector import JSONConnector
+from datasentinel.connectors.registry import ConnectorRegistry
 from datasentinel.connectors.sql_connector import SQLConnector
-from datasentinel.connectors.api_connector import RestAPIConnector
-from datasentinel.core.exceptions import ConnectionFailedError, ConnectorError, SourceNotFoundError
+from datasentinel.core.exceptions import (
+    ConnectorError,
+    SourceNotFoundError,
+)
 
 
 def test_registry_registration() -> None:

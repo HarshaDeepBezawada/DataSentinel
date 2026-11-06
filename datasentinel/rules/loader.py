@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import Any, Dict, Union
+from typing import Any
+
 import yaml
 from pydantic import ValidationError
 
@@ -16,7 +17,7 @@ class RuleLoader:
     """Loads and validates pipeline configuration and rules from YAML files."""
 
     @classmethod
-    def load_yaml(cls, path_or_stream: Union[str, Path]) -> Dict[str, Any]:
+    def load_yaml(cls, path_or_stream: str | Path) -> dict[str, Any]:
         """Read YAML file safely."""
         path = Path(path_or_stream)
         if not path.is_file():
@@ -34,7 +35,7 @@ class RuleLoader:
             raise ConfigurationError(f"YAML syntax error in '{path}': {e}") from e
 
     @classmethod
-    def load_pipeline(cls, path_or_stream: Union[str, Path]) -> PipelineConfig:
+    def load_pipeline(cls, path_or_stream: str | Path) -> PipelineConfig:
         """Parse and validate entire pipeline configuration via Pydantic v2."""
         raw_dict = cls.load_yaml(path_or_stream)
         try:
@@ -49,7 +50,7 @@ class RuleLoader:
             ) from e
 
     @classmethod
-    def load_rules(cls, path_or_stream: Union[str, Path]) -> list[RuleConfig]:
+    def load_rules(cls, path_or_stream: str | Path) -> list[RuleConfig]:
         """Convenience helper to extract rule configs from pipeline."""
         pipeline = cls.load_pipeline(path_or_stream)
         return pipeline.rules

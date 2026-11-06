@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
 from datasentinel.alerts.base import BaseAlertNotifier
 from datasentinel.alerts.email_notifier import EmailNotifier
 from datasentinel.alerts.slack_notifier import SlackNotifier
@@ -13,9 +12,9 @@ from datasentinel.rules.models import AlertConfig
 class AlertManager:
     """Coordinates dispatching notifications to all configured channels."""
 
-    def __init__(self, config: Optional[AlertConfig] = None) -> None:
+    def __init__(self, config: AlertConfig | None = None) -> None:
         self.config = config
-        self.notifiers: List[BaseAlertNotifier] = []
+        self.notifiers: list[BaseAlertNotifier] = []
 
         if config:
             if config.email and config.email.enabled:

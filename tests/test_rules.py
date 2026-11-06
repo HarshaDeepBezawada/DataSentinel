@@ -1,12 +1,13 @@
 """Tests for rule implementations, YAML loader, and executor."""
 
 from pathlib import Path
+
 import pandas as pd
 import pytest
 
 from datasentinel.core.dataset import DataSet
 from datasentinel.core.exceptions import ConfigurationError, RuleValidationError
-from datasentinel.core.types import Severity, ValidationStatus
+from datasentinel.core.types import ValidationStatus
 from datasentinel.rules.executor import RuleExecutor
 from datasentinel.rules.foreign_key_check import ForeignKeyRule
 from datasentinel.rules.loader import RuleLoader

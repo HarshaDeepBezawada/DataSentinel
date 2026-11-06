@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, List, Optional
-import pandas as pd
+from typing import Any
 
 from datasentinel.core.dataset import DataSet
 from datasentinel.core.types import Severity
@@ -22,7 +21,7 @@ class UniqueCheckRule(BaseRule):
         rule_id: str,
         column: str,
         min_unique_rate: float = 1.0,
-        description: Optional[str] = None,
+        description: str | None = None,
         severity: Severity = Severity.ERROR,
     ) -> None:
         super().__init__(
@@ -45,7 +44,7 @@ class UniqueCheckRule(BaseRule):
             severity=config.severity,
         )
 
-    def run_check(self, dataset: DataSet) -> tuple[bool, int, int, List[Any], str]:
+    def run_check(self, dataset: DataSet) -> tuple[bool, int, int, list[Any], str]:
         df = dataset.to_dataframe()
         total_rows = len(df)
         if total_rows == 0:
@@ -63,7 +62,7 @@ class UniqueCheckRule(BaseRule):
 
         passed = unique_rate >= self.min_unique_rate
 
-        samples: List[Any] = series[duplicated_mask].head(5).tolist()
+        samples: list[Any] = series[duplicated_mask].head(5).tolist()
 
         if passed:
             msg = (

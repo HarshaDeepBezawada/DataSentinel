@@ -1,7 +1,8 @@
 """Additional targeted tests to maximize test coverage."""
 
-from pathlib import Path
 import sqlite3
+from pathlib import Path
+
 import httpx
 import pandas as pd
 import pytest
@@ -9,7 +10,7 @@ import pytest
 from datasentinel.connectors.api_connector import RestAPIConnector
 from datasentinel.connectors.sql_connector import SQLConnector
 from datasentinel.core.dataset import DataSet
-from datasentinel.core.exceptions import ConnectionFailedError, ConnectorError
+from datasentinel.core.exceptions import ConnectionFailedError
 
 
 def test_dataset_null_counts_and_chunked_fingerprint() -> None:
