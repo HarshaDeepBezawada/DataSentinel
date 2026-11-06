@@ -347,7 +347,7 @@ DataSentinel/
 ├── .env.example                  # Environment variable template
 ├── .gitignore                    # Git rules (un-ignores dist/*.whl & warehouse.db)
 ├── CHANGELOG.md                  # Semantic release log (0.1.0)
-├── DEMO_SCRIPT.md                # 5-minute second-by-second video script
+├── DEMO_READINESS.md             # Comprehensive demo walkthrough & readiness guide
 ├── LICENSE                       # MIT Open Source License
 ├── pyproject.toml                # Build system (Hatchling), dependencies, tool configs
 └── README.md                     # Complete project documentation and guide
@@ -552,7 +552,7 @@ Before you submit your project link, complete this final 3-step checklist:
   - **4:40 - 5:00:** Summary and conclusion.
 
 ### 2. Add Your Video Link to README.md
-- Upload your recording to YouTube (Unlisted) or Loom.
+- Upload your recording to Google Drive (ensure link sharing is set to 'Anyone with the link can view').
 - Open [`README.md`](file:///c:/Users/harsh/Downloads/DataSentiel/README.md) at line 9 and replace `https://youtu.be/YOUR_DEMO_VIDEO_ID` with your actual link.
 - Commit and push:
   ```powershell
@@ -564,4 +564,4 @@ Before you submit your project link, complete this final 3-step checklist:
 ### 3. Submit Project Links
 Submit the following two links to the Code A Nova portal:
 1. **GitHub Repository:** `https://github.com/HarshaDeepBezawada/DataSentinel.git`
-2. **Demo Video Link:** Your YouTube/Loom video URL.
+2. **Demo Video Link:** Your Google Drive video URL.

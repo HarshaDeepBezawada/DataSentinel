@@ -64,3 +64,6 @@ Thumbs.db
 
 # Local recording guides (personal notes)
 RECORDING_*
+
+# Demo scripts
+DEMO_SCRIPT*.md
